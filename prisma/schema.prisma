@@ -1,0 +1,249 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String             @id @default(cuid())
+  email              String             @unique
+  role               UserRole           @default(TRAVELER)
+  name               String?
+  organization       String?
+  country            String?
+  verificationStatus VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  // Relations
+  businesses       Business[]
+  bookings         Booking[]
+  campaigns        Campaign[]
+  reviews          Review[]
+  sentMessages     Message[]  @relation("MessageSender")
+  receivedMessages Message[]  @relation("MessageReceiver")
+
+  @@map("users")
+}
+
+model Business {
+  id                String       @id @default(cuid())
+  userId            String
+  businessName      String
+  description       String
+  location          String
+  city              String
+  country           String
+  coordinates       String? // JSON string for lat/lng
+  businessType      BusinessType
+  verificationBadge Boolean      @default(false)
+  trustScore        Float        @default(0.0)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  // Relations
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings      Listing[]
+  bookings      Booking[]
+  applications  Application[]
+  reviews       Review[]
+  verifications Verification[]
+
+  @@map("businesses")
+}
+
+model Listing {
+  id           String   @id @default(cuid())
+  businessId   String
+  title        String
+  description  String
+  pricing      Float
+  duration     String
+  activityType String
+  tags         String[] @default([])
+  verified     Boolean  @default(false)
+  maxCapacity  Int?
+  availability String? // JSON string for availability calendar
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+
+  @@map("listings")
+}
+
+model Booking {
+  id                    String        @id @default(cuid())
+  listingId             String
+  travelerId            String
+  businessId            String
+  bookingDate           DateTime
+  totalAmount           Float
+  commission            Float         @default(0.15) // 15% commission
+  paymentStatus         PaymentStatus @default(PENDING)
+  stripePaymentIntentId String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  // Relations
+  listing  Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  traveler User     @relation(fields: [travelerId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  review   Review?
+
+  @@map("bookings")
+}
+
+model Campaign {
+  id                   String         @id @default(cuid())
+  influencerId         String
+  title                String
+  description          String
+  targetRegion         String
+  deliverables         Json // JSON for posts, reels, stories
+  audienceDemographics Json // JSON for audience data
+  collaborationTerms   String?
+  status               CampaignStatus @default(OPEN)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  // Relations
+  influencer   User          @relation(fields: [influencerId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@map("campaigns")
+}
+
+model Application {
+  id             String            @id @default(cuid())
+  campaignId     String
+  businessId     String
+  proposalText   String
+  contentSamples Json? // JSON for media URLs
+  aiInsights     Json? // JSON for AI analysis
+  status         ApplicationStatus @default(PENDING)
+  proposedPrice  Float?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  // Relations
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@map("applications")
+}
+
+model Verification {
+  id                 String             @id @default(cuid())
+  businessId         String
+  documentType       String
+  documentUrl        String
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  verifiedBy         String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@map("verifications")
+}
+
+model AIAnalysis {
+  id         String   @id @default(cuid())
+  entityType String // itinerary, campaign_projection, listing_optimization
+  entityId   String
+  inputData  Json // JSON for input data
+  outputData Json // JSON for output data
+  modelUsed  String?
+  createdAt  DateTime @default(now())
+
+  @@map("ai_analyses")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  bookingId  String   @unique
+  travelerId String
+  businessId String
+  rating     Int // 1-5 stars
+  comment    String?
+  response   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  booking  Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  traveler User     @relation(fields: [travelerId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  // Relations
+  sender   User @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+// Enums
+enum UserRole {
+  TRAVELER
+  BUSINESS
+  INFLUENCER
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum BusinessType {
+  SAFARI
+  LODGE
+  TOUR_OPERATOR
+  RESTAURANT
+  ADVENTURE
+  CULTURAL
+  ACCOMMODATION
+}
+
+enum PaymentStatus {
+  PENDING
+  HELD_IN_ESCROW
+  COMPLETED
+  REFUNDED
+}
+
+enum CampaignStatus {
+  OPEN
+  CLOSED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
