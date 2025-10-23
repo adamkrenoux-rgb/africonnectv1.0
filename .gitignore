@@ -91,3 +91,7 @@ jspm_packages/
 
 # Prisma
 prisma/migrations/
+
+# Node.js binaries
+node-v18.20.8-darwin-x64/
+node.tar.gz

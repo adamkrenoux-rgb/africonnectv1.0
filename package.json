@@ -6,35 +6,23 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
-    "ai:dev": "cd ai-service && python main.py"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.0.0",
-    "@clerk/themes": "^1.0.0",
-    "@hookform/resolvers": "^3.9.0",
-    "@prisma/client": "^5.22.0",
-    "@stripe/react-stripe-js": "^5.2.0",
-    "@stripe/stripe-js": "^8.1.0",
-    "@supabase/supabase-js": "^2.38.0",
-    "autoprefixer": "^10.4.21",
-    "axios": "^1.7.2",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
-    "langchain": "^0.3.0",
-    "lucide-react": "^0.408.0",
     "next": "14.2.5",
-    "openai": "^4.52.7",
-    "prisma": "^5.22.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.52.1",
-    "stripe": "^16.12.0",
+    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8",
+    "lucide-react": "^0.408.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.4",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "react-hook-form": "^7.52.1",
+    "@hookform/resolvers": "^3.9.0",
+    "axios": "^1.7.2"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -42,8 +30,6 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
 }
