@@ -1,59 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs'
-import { prisma } from '@/lib/prisma'
-import { VerificationStatus } from '@prisma/client'
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { userId } = auth()
-    
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const { id } = params
+
+    // Mock verification for demo
+    const verification = {
+      id,
+      businessId: 'business_123',
+      documentType: 'business_license',
+      documentUrl: '/uploads/mock/license.pdf',
+      verificationStatus: 'PENDING',
+      createdAt: new Date()
     }
 
+    return NextResponse.json({ success: true, data: verification })
+  } catch (error) {
+    console.error('Error fetching verification:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const { id } = params
     const body = await request.json()
-    const { verificationStatus, notes } = body
+    const { status, adminNotes } = body
 
-    // Check if user is admin
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId }
-    })
-
-    if (!user || user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
-    }
-
-    const verification = await prisma.verification.update({
-      where: { id: params.id },
-      data: {
-        verificationStatus: verificationStatus as VerificationStatus,
-        verifiedAt: verificationStatus === 'APPROVED' ? new Date() : null,
-        verifiedBy: userId,
-        notes
-      },
-      include: {
-        business: {
-          include: {
-            user: {
-              select: {
-                name: true,
-                email: true
-              }
-            }
-          }
-        }
-      }
-    })
-
-    // If approved, update business verification badge
-    if (verificationStatus === 'APPROVED') {
-      await prisma.business.update({
-        where: { id: verification.businessId },
-        data: { verificationBadge: true }
-      })
+    // Mock verification update for demo
+    const verification = {
+      id,
+      verificationStatus: status,
+      adminNotes,
+      verifiedAt: status === 'APPROVED' ? new Date() : null,
+      updatedAt: new Date()
     }
 
     return NextResponse.json({ success: true, data: verification })
@@ -62,4 +42,3 @@ export async function PUT(
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
-

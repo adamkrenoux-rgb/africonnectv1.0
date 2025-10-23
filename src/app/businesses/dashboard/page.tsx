@@ -62,8 +62,6 @@ export default function BusinessDashboard() {
     { id: 'analytics', name: 'Analytics', icon: null }
   ]
 
-  const bookings = []
-
   const collabOffers = []
 
   const messages = []

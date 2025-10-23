@@ -12,14 +12,14 @@ export default function BusinessSetupPage() {
     businessType: '',
     location: '',
     description: '',
-    services: [],
+    services: [] as string[],
     pricing: '',
     contactInfo: {
       email: '',
       phone: '',
       website: ''
     },
-    media: []
+    media: [] as string[]
   })
 
   const businessTypes = [

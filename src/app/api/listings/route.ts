@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Temporarily return empty array until database is set up
-    const listings = []
+    const listings: any[] = []
 
     return NextResponse.json({
       success: true,

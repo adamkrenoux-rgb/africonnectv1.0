@@ -1,65 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs'
-import { prisma } from '@/lib/prisma'
-import { UserRole } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = auth()
-    
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const { searchParams } = new URL(request.url)
+    const role = searchParams.get('role')
+    const verified = searchParams.get('verified')
 
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-      include: {
-        business: true,
-        travelerBookings: {
-          include: {
-            listing: true,
-            business: true
-          }
-        },
-        influencerCampaigns: true
-      }
-    })
+    // Mock users for demo
+    const users: any[] = []
 
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
-    }
-
-    return NextResponse.json({ success: true, data: user })
+    return NextResponse.json({ success: true, data: users })
   } catch (error) {
-    console.error('Error fetching user:', error)
+    console.error('Error fetching users:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { userId } = auth()
+    const body = await request.json()
     
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // Mock user creation for demo
+    const user = {
+      id: 'user_' + Date.now(),
+      ...body,
+      createdAt: new Date()
     }
 
-    const body = await request.json()
-    const { name, organization, country, profileImage } = body
-
-    const user = await prisma.user.update({
-      where: { clerkId: userId },
-      data: {
-        name,
-        organization,
-        country,
-        profileImage
-      }
-    })
-
-    return NextResponse.json({ success: true, data: user })
+    return NextResponse.json({ success: true, data: user }, { status: 201 })
   } catch (error) {
-    console.error('Error updating user:', error)
+    console.error('Error creating user:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

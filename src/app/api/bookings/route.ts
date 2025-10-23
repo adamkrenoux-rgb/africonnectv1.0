@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     if (status) where.paymentStatus = status
 
     // Temporarily return empty array until database is set up
-    const bookings = []
+    const bookings: any[] = []
 
     return NextResponse.json({
       success: true,

@@ -4,14 +4,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { UserRole } from '@prisma/client'
+// import { UserRole } from '@prisma/client'
 
 export default function OnboardingPage() {
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null)
+  const [selectedRole, setSelectedRole] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleRoleSelection = async (role: UserRole) => {
+  const handleRoleSelection = async (role: string) => {
     setIsLoading(true)
     try {
       const response = await fetch('/api/users', {
@@ -48,11 +48,11 @@ export default function OnboardingPage() {
           {/* Traveler Card */}
           <Card 
             className={`p-8 text-center cursor-pointer transition-all ${
-              selectedRole === UserRole.TRAVELER 
+              selectedRole === 'TRAVELER' 
                 ? 'ring-2 ring-africa-earth bg-africa-earth/5' 
                 : 'hover:shadow-lg'
             }`}
-            onClick={() => setSelectedRole(UserRole.TRAVELER)}
+            onClick={() => setSelectedRole('TRAVELER')}
           >
             <div className="text-6xl mb-4">🧭</div>
             <h3 className="text-2xl font-semibold mb-4">Traveler</h3>
@@ -70,11 +70,11 @@ export default function OnboardingPage() {
           {/* Business Card */}
           <Card 
             className={`p-8 text-center cursor-pointer transition-all ${
-              selectedRole === UserRole.BUSINESS 
+              selectedRole === ''BUSINESS 
                 ? 'ring-2 ring-africa-earth bg-africa-earth/5' 
                 : 'hover:shadow-lg'
             }`}
-            onClick={() => setSelectedRole(UserRole.BUSINESS)}
+            onClick={() => setSelectedRole(''BUSINESS)}
           >
             <div className="text-6xl mb-4">🏢</div>
             <h3 className="text-2xl font-semibold mb-4">Business</h3>
@@ -92,11 +92,11 @@ export default function OnboardingPage() {
           {/* Influencer Card */}
           <Card 
             className={`p-8 text-center cursor-pointer transition-all ${
-              selectedRole === UserRole.INFLUENCER 
+              selectedRole === ''INFLUENCER 
                 ? 'ring-2 ring-africa-earth bg-africa-earth/5' 
                 : 'hover:shadow-lg'
             }`}
-            onClick={() => setSelectedRole(UserRole.INFLUENCER)}
+            onClick={() => setSelectedRole(''INFLUENCER)}
           >
             <div className="text-6xl mb-4">📱</div>
             <h3 className="text-2xl font-semibold mb-4">Influencer</h3>

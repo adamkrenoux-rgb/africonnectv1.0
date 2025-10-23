@@ -260,7 +260,7 @@ export async function POST(request: NextRequest) {
       }
 
         // Temporarily return empty array until database is set up
-        const verifiedBusinesses = []
+        const verifiedBusinesses: any[] = []
     
     // If no verified businesses exist, return message
     if (verifiedBusinesses.length === 0) {
@@ -479,18 +479,18 @@ export async function POST(request: NextRequest) {
         if (i > 1 && hotel && hotel.location !== currentLocation) {
           const travelKey = `${currentLocation} to ${hotel.location}`
           const reverseKey = `${hotel.location} to ${currentLocation}`
-          const travelTime = travelTimes[destination]?.[travelKey] || travelTimes[destination]?.[reverseKey] || 2
+          const travelTime = (travelTimes as any)[destination]?.[travelKey] || (travelTimes as any)[destination]?.[reverseKey] || 2
           
           // Select appropriate transport based on budget and distance
-          const availableTransport = transportOptions[destination] || []
+          const availableTransport = (transportOptions as any)[destination] || []
           let selectedTransport = availableTransport[0] // Default to first option
           
           if (budget === 'budget') {
-            selectedTransport = availableTransport.find(t => t.speed === 'slow') || availableTransport[0]
+            selectedTransport = availableTransport.find((t: any) => t.speed === 'slow') || availableTransport[0]
           } else if (budget === 'luxury') {
-            selectedTransport = availableTransport.find(t => t.speed === 'fast') || availableTransport[0]
+            selectedTransport = availableTransport.find((t: any) => t.speed === 'fast') || availableTransport[0]
           } else {
-            selectedTransport = availableTransport.find(t => t.speed === 'medium') || availableTransport[0]
+            selectedTransport = availableTransport.find((t: any) => t.speed === 'medium') || availableTransport[0]
           }
           
           const transportCost = Math.round(selectedTransport.costPerHour * travelTime)
@@ -575,7 +575,7 @@ export async function POST(request: NextRequest) {
     }, 0)
 
     // Get available transport options for the destination
-    const availableTransportOptions = transportOptions[destination]?.map(t => t.type) || []
+    const availableTransportOptions = (transportOptions as any)[destination]?.map((t: any) => t.type) || []
 
     const mockItinerary = {
       title: `Amazing ${destination} Adventure`,

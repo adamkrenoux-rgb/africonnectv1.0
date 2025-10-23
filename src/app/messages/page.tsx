@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
 export default function MessagesPage() {
-  const [activeConversation, setActiveConversation] = useState(null)
+  const [activeConversation, setActiveConversation] = useState<any>(null)
   const [newMessage, setNewMessage] = useState('')
 
   // Mock conversations data - in real app this would come from API
@@ -228,7 +228,7 @@ export default function MessagesPage() {
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {activeConversation.messages.map((message) => (
+                  {activeConversation.messages.map((message: any) => (
                     <div
                       key={message.id}
                       className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}

@@ -9,10 +9,10 @@ export default function InfluencerBusinessesPage() {
   const [activeTab, setActiveTab] = useState('listings')
 
   // No business listings yet - will be populated when real businesses create listings
-  const listings = []
+  const listings: any[] = []
 
   // No applications yet - will be populated when real collaborations are created
-  const applications = []
+  const applications: any[] = []
 
   const filteredData = activeTab === 'listings' ? listings : applications
 

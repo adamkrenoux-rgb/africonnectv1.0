@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     if (businessType) where.businessType = businessType
 
     // Temporarily return empty array until database is set up
-    const verifiedBusinesses = []
+    const verifiedBusinesses: any[] = []
     
     // If no verified businesses found
     if (verifiedBusinesses.length === 0) {

@@ -90,20 +90,6 @@ export async function POST(request: NextRequest) {
       createdAt: new Date(),
       updatedAt: new Date()
     }
-      data: {
-        ...validatedData,
-        status: 'OPEN',
-      },
-      include: {
-        influencer: {
-          select: {
-            name: true,
-            email: true,
-            verificationStatus: true,
-          }
-        }
-      }
-    })
 
     return NextResponse.json({
       success: true,

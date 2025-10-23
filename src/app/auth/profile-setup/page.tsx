@@ -58,7 +58,7 @@ export default function ProfileSetupPage() {
       setFormData(prev => ({
         ...prev,
         [parent]: {
-          ...prev[parent as keyof typeof prev],
+          ...(prev[parent as keyof typeof prev] as any),
           [child]: value
         }
       }))
@@ -158,7 +158,7 @@ export default function ProfileSetupPage() {
                       <label key={language} className="flex items-center space-x-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={formData.languages.includes(language)}
+                          checked={(formData.languages as string[]).includes(language)}
                           onChange={(e) => handleArrayChange('languages', language, e.target.checked)}
                           className="w-4 h-4 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
                         />
@@ -191,7 +191,7 @@ export default function ProfileSetupPage() {
                           <label key={interest} className="flex items-center space-x-2 cursor-pointer">
                             <input
                               type="checkbox"
-                              checked={formData.interests.includes(interest)}
+                              checked={(formData.interests as string[]).includes(interest)}
                               onChange={(e) => handleArrayChange('interests', interest, e.target.checked)}
                               className="w-4 h-4 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
                             />
@@ -228,7 +228,7 @@ export default function ProfileSetupPage() {
                           <label key={specialty} className="flex items-center space-x-2 cursor-pointer">
                             <input
                               type="checkbox"
-                              checked={formData.specialties.includes(specialty)}
+                              checked={(formData.specialties as string[]).includes(specialty)}
                               onChange={(e) => handleArrayChange('specialties', specialty, e.target.checked)}
                               className="w-4 h-4 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
                             />
@@ -266,7 +266,7 @@ export default function ProfileSetupPage() {
                           <label key={specialty} className="flex items-center space-x-2 cursor-pointer">
                             <input
                               type="checkbox"
-                              checked={formData.specialties.includes(specialty)}
+                              checked={(formData.specialties as string[]).includes(specialty)}
                               onChange={(e) => handleArrayChange('specialties', specialty, e.target.checked)}
                               className="w-4 h-4 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
                             />

@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { DocumentType } from '@prisma/client'
+// import { DocumentType } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 
 export default function BusinessVerificationPage() {
   const [documents, setDocuments] = useState<Array<{
-    type: DocumentType
+    type: string
     url: string
     status: string
   }>>([])
@@ -27,7 +27,7 @@ export default function BusinessVerificationPage() {
       })
   }, [])
 
-  const handleFileUpload = async (type: DocumentType, file: File) => {
+  const handleFileUpload = async (type: string, file: File) => {
     if (!businessId) return
 
     setIsLoading(true)
@@ -64,37 +64,37 @@ export default function BusinessVerificationPage() {
 
   const documentTypes = [
     {
-      type: 'BUSINESS_LICENSE' as DocumentType,
+      type: 'BUSINESS_LICENSE',
       title: 'Business License',
       description: 'Official business registration or license',
       icon: '📄'
     },
     {
-      type: 'TAX_REGISTRATION' as DocumentType,
+      type: 'TAX_REGISTRATION',
       title: 'Tax Registration',
       description: 'Tax registration certificate or number',
       icon: '🧾'
     },
     {
-      type: 'GOVERNMENT_ID' as DocumentType,
+      type: 'GOVERNMENT_ID',
       title: 'Government ID',
       description: 'Valid government-issued identification',
       icon: '🆔'
     },
     {
-      type: 'WEBSITE' as DocumentType,
+      type: 'WEBSITE',
       title: 'Website',
       description: 'Business website URL',
       icon: '🌐'
     },
     {
-      type: 'SOCIAL_PROFILE' as DocumentType,
+      type: 'SOCIAL_PROFILE',
       title: 'Social Media Profile',
       description: 'Business social media profiles',
       icon: '📱'
     },
     {
-      type: 'CUSTOMER_REVIEWS' as DocumentType,
+      type: 'CUSTOMER_REVIEWS',
       title: 'Customer Reviews',
       description: 'External customer reviews or testimonials',
       icon: '⭐'

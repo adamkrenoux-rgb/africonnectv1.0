@@ -69,7 +69,7 @@ export default function CreateCampaignPage() {
     setFormData(prev => ({
       ...prev,
       [parent]: {
-        ...prev[parent as keyof typeof prev],
+        ...(prev[parent as keyof typeof prev] as any),
         [field]: value
       }
     }))
@@ -78,9 +78,9 @@ export default function CreateCampaignPage() {
   const handleArrayToggle = (field: string, item: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].includes(item)
-        ? prev[field as keyof typeof prev].filter((i: string) => i !== item)
-        : [...prev[field as keyof typeof prev], item]
+      [field]: (prev[field as keyof typeof prev] as string[]).includes(item)
+        ? (prev[field as keyof typeof prev] as string[]).filter((i: string) => i !== item)
+        : [...(prev[field as keyof typeof prev] as string[]), item]
     }))
   }
 
@@ -177,7 +177,7 @@ export default function CreateCampaignPage() {
                     type="button"
                     onClick={() => handleArrayToggle('deliverables', deliverable)}
                     className={`p-3 rounded-lg border text-left transition-colors ${
-                      formData.deliverables.includes(deliverable)
+                      (formData.deliverables as string[]).includes(deliverable)
                         ? 'border-yellow-500 bg-yellow-500/20 text-yellow-400'
                         : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-yellow-500'
                     }`}
@@ -234,7 +234,7 @@ export default function CreateCampaignPage() {
                     type="button"
                     onClick={() => handleArrayToggle('audienceDemographics.interests', interest)}
                     className={`p-3 rounded-lg border text-left transition-colors ${
-                      formData.audienceDemographics.interests.includes(interest)
+                      (formData.audienceDemographics.interests as string[]).includes(interest)
                         ? 'border-yellow-500 bg-yellow-500/20 text-yellow-400'
                         : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-yellow-500'
                     }`}

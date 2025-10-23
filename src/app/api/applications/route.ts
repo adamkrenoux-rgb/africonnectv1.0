@@ -25,48 +25,7 @@ export async function GET(request: NextRequest) {
     if (status) where.status = status
 
     // Temporarily return empty array until database is set up
-    const applications = []
-      where,
-      include: {
-        campaign: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            targetRegion: true,
-            status: true,
-            influencer: {
-              select: {
-                name: true,
-                email: true,
-                verificationStatus: true,
-              }
-            }
-          }
-        },
-        business: {
-          select: {
-            id: true,
-            businessName: true,
-            location: true,
-            city: true,
-            country: true,
-            businessType: true,
-            verificationBadge: true,
-            trustScore: true,
-            user: {
-              select: {
-                name: true,
-                verificationStatus: true,
-              }
-            }
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    })
+    const applications: any[] = []
 
     return NextResponse.json({
       success: true,
@@ -74,11 +33,10 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Error fetching applications:', error)
-    return NextResponse.json({
-      success: false,
-      message: 'Failed to fetch applications',
-      error: (error as Error).message
-    }, { status: 500 })
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch applications' },
+      { status: 500 }
+    )
   }
 }
 
@@ -89,41 +47,12 @@ export async function POST(request: NextRequest) {
 
     // Temporarily return mock data until database is set up
     const application = {
-      id: 'temp-id',
+      id: 'temp-application-id',
       ...validatedData,
       status: 'PENDING',
       createdAt: new Date(),
       updatedAt: new Date()
     }
-      data: {
-        ...validatedData,
-        status: 'PENDING',
-      },
-      include: {
-        campaign: {
-          select: {
-            title: true,
-            description: true,
-            targetRegion: true,
-            influencer: {
-              select: {
-                name: true,
-                email: true,
-              }
-            }
-          }
-        },
-        business: {
-          select: {
-            businessName: true,
-            location: true,
-            city: true,
-            country: true,
-            businessType: true,
-          }
-        }
-      }
-    })
 
     return NextResponse.json({
       success: true,
@@ -131,19 +60,9 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
   } catch (error) {
     console.error('Error creating application:', error)
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({
-        success: false,
-        message: 'Invalid input data',
-        errors: error.errors
-      }, { status: 400 })
-    }
-
-    return NextResponse.json({
-      success: false,
-      message: 'Failed to create application',
-      error: (error as Error).message
-    }, { status: 500 })
+    return NextResponse.json(
+      { success: false, error: 'Failed to create application' },
+      { status: 500 }
+    )
   }
 }

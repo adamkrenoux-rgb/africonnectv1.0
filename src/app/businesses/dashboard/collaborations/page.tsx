@@ -9,8 +9,8 @@ export default function BusinessCollaborationsPage() {
   const [activeTab, setActiveTab] = useState('campaigns')
 
   // No campaigns or applications yet - will be populated when real influencers create campaigns
-  const campaigns = []
-  const applications = []
+  const campaigns: any[] = []
+  const applications: any[] = []
 
   const filteredData = activeTab === 'campaigns' ? campaigns : applications
 
