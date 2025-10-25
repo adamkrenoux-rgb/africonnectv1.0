@@ -1,73 +1,4 @@
-// Re-export Prisma types (commented out until database is set up)
-// export type {
-//   User,
-//   Business,
-//   Listing,
-//   Booking,
-//   Campaign,
-//   Application,
-//   Verification,
-//   AIAnalysis,
-//   Review,
-//   UserRole,
-//   VerificationStatus,
-//   BusinessType,
-//   ActivityType,
-//   PaymentStatus,
-//   BookingStatus,
-//   CampaignStatus,
-//   ApplicationStatus,
-//   CollaborationType,
-//   DocumentType,
-//   EntityType,
-// } from '@prisma/client'
-
-// Temporary type definitions
-export type User = any
-export type Business = any
-export type Listing = any
-export type Booking = any
-export type Campaign = any
-export type Application = any
-export type Verification = any
-export type AIAnalysis = any
-export type Review = any
-export type UserRole = any
-export type VerificationStatus = any
-export type BusinessType = any
-export type ActivityType = any
-export type PaymentStatus = any
-export type BookingStatus = any
-export type CampaignStatus = any
-export type ApplicationStatus = any
-export type CollaborationType = any
-export type DocumentType = any
-export type EntityType = any
-
-// Additional types for the application
-export interface TripPreferences {
-  budget: {
-    min: number
-    max: number
-    currency: string
-  }
-  dates: {
-    start: string
-    end: string
-  }
-  activities: string[]
-  mustHaves: string[]
-  dealbreakers: string[]
-  location?: {
-    country?: string
-    city?: string
-    coordinates?: [number, number]
-    radius?: number // in km
-  }
-  groupSize: number
-  accommodationType?: string
-  transportPreferences?: string[]
-}
+// Essential types for the application
 
 export interface AIItinerary {
   id: string
@@ -111,27 +42,6 @@ export interface AIItinerary {
   aiGenerated: boolean
 }
 
-export interface CampaignProjection {
-  predictedReach: number
-  engagementRate: number
-  estimatedBookings: {
-    min: number
-    max: number
-  }
-  recommendedPrice: {
-    min: number
-    max: number
-    currency: string
-  }
-  confidence: number
-  factors: {
-    influencerEngagement: number
-    audienceMatch: number
-    contentQuality: number
-    marketDemand: number
-  }
-}
-
 export interface BusinessListing {
   id: string
   title: string
@@ -172,11 +82,11 @@ export interface UserProfile {
   id: string
   email: string
   name: string
-  role: UserRole
+  role: string
   organization?: string
   country?: string
   profileImage?: string
-  verificationStatus: VerificationStatus
+  verificationStatus: string
 }
 
 export interface BusinessProfile extends UserProfile {
@@ -184,7 +94,7 @@ export interface BusinessProfile extends UserProfile {
     id: string
     businessName: string
     description: string
-    businessType: BusinessType
+    businessType: string
     location: {
       country: string
       city: string
@@ -229,7 +139,7 @@ export interface PaginatedResponse<T> {
 export interface BusinessOnboardingForm {
   businessName: string
   description: string
-  businessType: BusinessType
+  businessType: string
   location: {
     country: string
     city: string
@@ -255,7 +165,7 @@ export interface CampaignCreationForm {
     interests: string[]
     location: string[]
   }
-  collaborationTerms: CollaborationType
+  collaborationTerms: string
   budget?: number
 }
 
