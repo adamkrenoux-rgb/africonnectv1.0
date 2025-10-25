@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -170,9 +171,11 @@ export default function ForYouPage() {
                   <h4 className="text-xl font-semibold text-white mb-2">{item.title}</h4>
                   <p className="text-gray-300 mb-4">{item.description}</p>
                   
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.title}
+                    width={600}
+                    height={300}
                     className="w-full h-64 object-cover rounded-lg mb-4"
                   />
                   

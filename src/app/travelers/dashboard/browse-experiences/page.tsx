@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -235,9 +236,11 @@ export default function BrowseExperiencesPage() {
                 <Link key={experience.id} href={`/experiences/${experience.id}`}>
                   <Card className="bg-gray-800 border-yellow-500/30 hover:border-yellow-400 transition-all duration-300 cursor-pointer group">
                     <div className="relative">
-                      <img
+                      <Image
                         src={experience.image}
                         alt={experience.title}
+                        width={400}
+                        height={200}
                         className="w-full h-48 object-cover rounded-t-lg"
                       />
                       {experience.verified && (

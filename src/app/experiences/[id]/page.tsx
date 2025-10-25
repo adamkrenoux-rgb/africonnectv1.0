@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -104,23 +105,29 @@ export default function ExperienceDetailPage({ params }: { params: { id: string 
             {/* Images */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
-                <img
+                <Image
                   src={experience.images[0]}
                   alt={experience.title}
+                  width={800}
+                  height={400}
                   className="w-full h-96 object-cover rounded-lg"
                 />
               </div>
               <div>
-                <img
+                <Image
                   src={experience.images[1]}
                   alt={experience.title}
+                  width={400}
+                  height={200}
                   className="w-full h-48 object-cover rounded-lg"
                 />
               </div>
               <div>
-                <img
+                <Image
                   src={experience.images[2]}
                   alt={experience.title}
+                  width={400}
+                  height={200}
                   className="w-full h-48 object-cover rounded-lg"
                 />
               </div>

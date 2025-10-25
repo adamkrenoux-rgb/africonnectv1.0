@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
@@ -157,9 +158,11 @@ export default function CollaborationPage({ params }: { params: { id: string } }
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                       {collaboration.campaign.influencer.profileImage ? (
-                        <img 
+                        <Image 
                           src={collaboration.campaign.influencer.profileImage} 
                           alt={collaboration.campaign.influencer.name}
+                          width={40}
+                          height={40}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
@@ -178,9 +181,11 @@ export default function CollaborationPage({ params }: { params: { id: string } }
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                       {collaboration.application.business.user.profileImage ? (
-                        <img 
+                        <Image 
                           src={collaboration.application.business.user.profileImage} 
                           alt={collaboration.application.business.user.name}
+                          width={40}
+                          height={40}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
