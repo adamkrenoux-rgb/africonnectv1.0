@@ -405,6 +405,219 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">What Our Community Says</h2>
+            <p className="text-xl text-gray-300">Real stories from travelers, businesses, and influencers</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="bg-gray-800 border-gray-700 p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-bold">S</span>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold">Sarah Johnson</h4>
+                  <p className="text-sm text-gray-400">Traveler from New York</p>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400">★</span>
+                ))}
+              </div>
+              <p className="text-gray-300 italic">
+                "AFRICONNECT helped me discover the most incredible Maasai cultural experience in Kenya. The AI recommendations were spot-on, and everything was verified and authentic."
+              </p>
+            </Card>
+
+            <Card className="bg-gray-800 border-gray-700 p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-bold">M</span>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold">Michael Chen</h4>
+                  <p className="text-sm text-gray-400">Safari Business Owner, Tanzania</p>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400">★</span>
+                ))}
+              </div>
+              <p className="text-gray-300 italic">
+                "Since joining AFRICONNECT, our bookings have increased by 300%. The platform connects us with serious travelers who appreciate authentic experiences."
+              </p>
+            </Card>
+
+            <Card className="bg-gray-800 border-gray-700 p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-bold">A</span>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold">Aisha Okafor</h4>
+                  <p className="text-sm text-gray-400">Travel Influencer, Lagos</p>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400">★</span>
+                ))}
+              </div>
+              <p className="text-gray-300 italic">
+                "The AI campaign projections are incredibly accurate. I've collaborated with amazing African businesses and my audience loves the authentic content."
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Destinations */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Featured African Destinations</h2>
+            <p className="text-xl text-gray-300">Discover the continent's most incredible experiences</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                name: "Serengeti National Park",
+                country: "Tanzania",
+                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
+                description: "Witness the Great Migration"
+              },
+              {
+                name: "Maasai Mara",
+                country: "Kenya", 
+                image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
+                description: "Big Five safari adventures"
+              },
+              {
+                name: "Victoria Falls",
+                country: "Zambia/Zimbabwe",
+                image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
+                description: "Smoke that thunders"
+              },
+              {
+                name: "Cape Town",
+                country: "South Africa",
+                image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
+                description: "Mother City's beauty"
+              }
+            ].map((destination, index) => (
+              <Card key={index} className="bg-gray-800 border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div className="relative h-48">
+                  <Image
+                    src={destination.image}
+                    alt={destination.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-semibold">{destination.name}</h3>
+                    <p className="text-sm text-gray-200">{destination.country}</p>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <p className="text-gray-300 text-sm">{destination.description}</p>
+                  <Button className="w-full mt-3 bg-yellow-500 hover:bg-yellow-600 text-black">
+                    Explore
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust & Security Section */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Trusted & Secure</h2>
+            <p className="text-xl text-gray-300">Your safety and security are our top priorities</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">✓</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Verified Businesses</h3>
+              <p className="text-gray-300 text-sm">Every business undergoes comprehensive verification including document checks and quality assessments</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🔒</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Secure Payments</h3>
+              <p className="text-gray-300 text-sm">All transactions are processed through Stripe with bank-level security and fraud protection</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🛡️</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Escrow Protection</h3>
+              <p className="text-gray-300 text-sm">Payments are held in secure escrow until your experience is completed to your satisfaction</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">⭐</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Review System</h3>
+              <p className="text-gray-300 text-sm">Comprehensive review system helps you make informed decisions and maintains quality standards</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats & Impact Section */}
+      <section className="py-20 bg-gradient-to-br from-yellow-600/20 via-orange-500/30 to-red-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Making a Real Impact</h2>
+            <p className="text-xl text-gray-300">Connecting communities and supporting local economies</p>
+          </div>
+          
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-400 mb-2">500+</div>
+              <p className="text-white font-semibold">Verified Businesses</p>
+              <p className="text-gray-300 text-sm">Across 15 African countries</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-400 mb-2">10K+</div>
+              <p className="text-white font-semibold">Happy Travelers</p>
+              <p className="text-gray-300 text-sm">Authentic experiences delivered</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-400 mb-2">$2M+</div>
+              <p className="text-white font-semibold">Revenue Generated</p>
+              <p className="text-gray-300 text-sm">For local communities</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-400 mb-2">4.8★</div>
+              <p className="text-white font-semibold">Average Rating</p>
+              <p className="text-gray-300 text-sm">From verified reviews</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-black via-gray-900 to-black relative overflow-hidden">
         <div className="absolute inset-0 bg-yellow-500/10"></div>
