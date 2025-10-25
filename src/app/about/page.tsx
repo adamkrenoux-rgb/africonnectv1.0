@@ -141,41 +141,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-white mb-4">Meet Our Team</h2>
-            <p className="text-xl text-gray-300">Passionate individuals working to transform African tourism</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-gray-800 border-gray-700 p-6 text-center">
-              <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">👨‍💼</span>
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Leadership Team</h3>
-              <p className="text-gray-300 text-sm">Experienced leaders from travel, technology, and African business sectors</p>
-            </Card>
-
-            <Card className="bg-gray-800 border-gray-700 p-6 text-center">
-              <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">💻</span>
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Tech Team</h3>
-              <p className="text-gray-300 text-sm">AI engineers, developers, and designers building the future of travel</p>
-            </Card>
-
-            <Card className="bg-gray-800 border-gray-700 p-6 text-center">
-              <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🌍</span>
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Local Partners</h3>
-              <p className="text-gray-300 text-sm">African tourism experts and community advocates across the continent</p>
-            </Card>
-          </div>
-        </div>
-      </section>
 
       {/* CTA */}
       <section className="py-20">
