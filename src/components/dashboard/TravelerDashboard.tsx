@@ -3,24 +3,22 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { User } from '@prisma/client'
+// import { User } from '@prisma/client'
 import Link from 'next/link'
 
 interface TravelerDashboardProps {
-  user: User & {
-    travelerBookings: any[]
-  }
+  user: any
 }
 
 export default function TravelerDashboard({ user }: TravelerDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview')
 
   const upcomingBookings = user.travelerBookings.filter(
-    booking => new Date(booking.bookingDate) > new Date()
+    (booking: any) => new Date(booking.bookingDate) > new Date()
   )
 
   const pastBookings = user.travelerBookings.filter(
-    booking => new Date(booking.bookingDate) <= new Date()
+    (booking: any) => new Date(booking.bookingDate) <= new Date()
   )
 
   return (
@@ -155,7 +153,7 @@ export default function TravelerDashboard({ user }: TravelerDashboardProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {upcomingBookings.slice(0, 3).map((booking) => (
+                    {upcomingBookings.slice(0, 3).map((booking: any) => (
                       <div key={booking.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div>
                           <h4 className="font-medium">{booking.listing.title}</h4>
@@ -190,7 +188,7 @@ export default function TravelerDashboard({ user }: TravelerDashboardProps) {
                 </CardContent>
               </Card>
             ) : (
-              upcomingBookings.map((booking) => (
+              upcomingBookings.map((booking: any) => (
                 <Card key={booking.id}>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">
@@ -225,7 +223,7 @@ export default function TravelerDashboard({ user }: TravelerDashboardProps) {
                 </CardContent>
               </Card>
             ) : (
-              pastBookings.map((booking) => (
+              pastBookings.map((booking: any) => (
                 <Card key={booking.id}>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">

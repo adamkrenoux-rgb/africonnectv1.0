@@ -3,14 +3,11 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { User, Business } from '@prisma/client'
+// import { User, Business } from '@prisma/client'
 import Link from 'next/link'
 
 interface BusinessDashboardProps {
-  user: User & {
-    business: Business | null
-    travelerBookings: any[]
-  }
+  user: any
 }
 
 export default function BusinessDashboard({ user }: BusinessDashboardProps) {
@@ -82,7 +79,7 @@ export default function BusinessDashboard({ user }: BusinessDashboardProps) {
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Revenue</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    ${recentBookings.reduce((sum, booking) => sum + booking.totalAmount, 0)}
+                    ${recentBookings.reduce((sum: any, booking: any) => sum + booking.totalAmount, 0)}
                   </p>
                 </div>
               </div>
@@ -183,7 +180,7 @@ export default function BusinessDashboard({ user }: BusinessDashboardProps) {
                     <p className="text-gray-500 text-center py-4">No bookings yet</p>
                   ) : (
                     <div className="space-y-3">
-                      {recentBookings.map((booking) => (
+                      {recentBookings.map((booking: any) => (
                         <div key={booking.id} className="flex justify-between items-center p-3 border rounded">
                           <div>
                             <p className="font-medium">{booking.listing.title}</p>
@@ -257,7 +254,7 @@ export default function BusinessDashboard({ user }: BusinessDashboardProps) {
                 </CardContent>
               </Card>
             ) : (
-              recentBookings.map((booking) => (
+              recentBookings.map((booking: any) => (
                 <Card key={booking.id}>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">

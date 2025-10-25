@@ -15,11 +15,11 @@ export default function TravelerDashboard() {
     { id: 'foryou', name: 'For You', icon: null }
   ]
 
-  const experiences = []
+  const experiences: any[] = []
 
-  const messages = []
+  const messages: any[] = []
 
-  const forYouContent = []
+  const forYouContent: any[] = []
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">

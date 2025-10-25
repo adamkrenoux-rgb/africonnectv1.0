@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
-import { prisma } from '@/lib/prisma'
+// import { prisma } from '@/lib/prisma'
 import { headers } from 'next/headers'
 
 export async function POST(request: NextRequest) {
@@ -51,13 +51,15 @@ async function handlePaymentSucceeded(paymentIntent: any) {
   const { bookingId } = paymentIntent.metadata
 
   if (bookingId) {
-    await prisma.booking.update({
-      where: { id: bookingId },
-      data: {
-        paymentStatus: 'HELD_IN_ESCROW',
-        status: 'CONFIRMED'
-      }
-    })
+    // Mock booking update (replace with real Prisma call when database is set up)
+    console.log('Payment succeeded for booking:', bookingId)
+    // await prisma.booking.update({
+    //   where: { id: bookingId },
+    //   data: {
+    //     paymentStatus: 'HELD_IN_ESCROW',
+    //     status: 'CONFIRMED'
+    //   }
+    // })
 
     // TODO: Send confirmation emails
     console.log(`Payment succeeded for booking ${bookingId}`)
@@ -68,13 +70,15 @@ async function handlePaymentFailed(paymentIntent: any) {
   const { bookingId } = paymentIntent.metadata
 
   if (bookingId) {
-    await prisma.booking.update({
-      where: { id: bookingId },
-      data: {
-        paymentStatus: 'FAILED',
-        status: 'CANCELLED'
-      }
-    })
+    // Mock booking update (replace with real Prisma call when database is set up)
+    console.log('Payment failed for booking:', bookingId)
+    // await prisma.booking.update({
+    //   where: { id: bookingId },
+    //   data: {
+    //     paymentStatus: 'FAILED',
+    //     status: 'CANCELLED'
+    //   }
+    // })
 
     console.log(`Payment failed for booking ${bookingId}`)
   }
@@ -84,13 +88,15 @@ async function handlePaymentCanceled(paymentIntent: any) {
   const { bookingId } = paymentIntent.metadata
 
   if (bookingId) {
-    await prisma.booking.update({
-      where: { id: bookingId },
-      data: {
-        paymentStatus: 'FAILED',
-        status: 'CANCELLED'
-      }
-    })
+    // Mock booking update (replace with real Prisma call when database is set up)
+    console.log('Payment failed for booking:', bookingId)
+    // await prisma.booking.update({
+    //   where: { id: bookingId },
+    //   data: {
+    //     paymentStatus: 'FAILED',
+    //     status: 'CANCELLED'
+    //   }
+    // })
 
     console.log(`Payment canceled for booking ${bookingId}`)
   }

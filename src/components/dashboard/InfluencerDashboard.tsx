@@ -3,24 +3,22 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { User, Campaign } from '@prisma/client'
+// import { User, Campaign } from '@prisma/client'
 import Link from 'next/link'
 
 interface InfluencerDashboardProps {
-  user: User & {
-    influencerCampaigns: Campaign[]
-  }
+  user: any
 }
 
 export default function InfluencerDashboard({ user }: InfluencerDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview')
 
   const activeCampaigns = user.influencerCampaigns.filter(
-    campaign => campaign.status === 'OPEN' || campaign.status === 'IN_PROGRESS'
+    (campaign: any) => campaign.status === 'OPEN' || campaign.status === 'IN_PROGRESS'
   )
 
   const completedCampaigns = user.influencerCampaigns.filter(
-    campaign => campaign.status === 'COMPLETED'
+    (campaign: any) => campaign.status === 'COMPLETED'
   )
 
   return (
@@ -156,7 +154,7 @@ export default function InfluencerDashboard({ user }: InfluencerDashboardProps) 
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {activeCampaigns.slice(0, 3).map((campaign) => (
+                    {activeCampaigns.slice(0, 3).map((campaign: any) => (
                       <div key={campaign.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div>
                           <h4 className="font-medium">{campaign.title}</h4>
@@ -199,7 +197,7 @@ export default function InfluencerDashboard({ user }: InfluencerDashboardProps) 
                 </CardContent>
               </Card>
             ) : (
-              user.influencerCampaigns.map((campaign) => (
+              user.influencerCampaigns.map((campaign: any) => (
                 <Card key={campaign.id}>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">

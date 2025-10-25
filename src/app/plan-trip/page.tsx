@@ -16,7 +16,7 @@ export default function PlanTripPage() {
     travelDates: ''
   })
   const [isGenerating, setIsGenerating] = useState(false)
-  const [itinerary, setItinerary] = useState(null)
+  const [itinerary, setItinerary] = useState<any>(null)
 
   const handleInputChange = (field: string, value: string) => {
     setPreferences(prev => ({

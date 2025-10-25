@@ -14,7 +14,7 @@ export const seedBusinessData = {
 
 // Function to get verified business data for AI itinerary generation
 export const getBusinessDataForAI = (destination: string, businessType?: string) => {
-  return seedBusinessData.listings.filter(listing => 
+  return seedBusinessData.listings.filter((listing: any) => 
     listing.location === destination && 
     (!businessType || listing.businessType === businessType) &&
     listing.verified === true
@@ -23,12 +23,12 @@ export const getBusinessDataForAI = (destination: string, businessType?: string)
 
 // Function to get verified analytics data for a business
 export const getBusinessAnalytics = (businessId: string) => {
-  const analytics = seedBusinessData.businessAnalytics.find(analytics => 
+  const analytics = seedBusinessData.businessAnalytics.find((analytics: any) => 
     analytics.businessId === businessId
   )
   
   // Only return analytics for verified businesses
-  if (!analytics || !analytics.verified) {
+  if (!analytics || !(analytics as any).verified) {
     return null
   }
   
@@ -37,12 +37,12 @@ export const getBusinessAnalytics = (businessId: string) => {
 
 // Function to get verified influencer data for campaign projections
 export const getInfluencerData = (influencerId: string) => {
-  const influencer = seedBusinessData.influencers.find(influencer => 
+  const influencer = seedBusinessData.influencers.find((influencer: any) => 
     influencer.id === influencerId
   )
   
   // Only return verified influencers
-  if (!influencer || !influencer.verified) {
+  if (!influencer || !(influencer as any).verified) {
     return null
   }
   

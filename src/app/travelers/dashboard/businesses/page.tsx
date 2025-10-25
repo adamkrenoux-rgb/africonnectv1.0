@@ -30,7 +30,7 @@ interface Business {
 export default function TravelerBusinessesPage() {
   const [activeTab, setActiveTab] = useState('listings')
   const [businesses, setBusinesses] = useState<Business[]>([])
-  const [bookings, setBookings] = useState([])
+  const [bookings, setBookings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

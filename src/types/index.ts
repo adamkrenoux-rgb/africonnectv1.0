@@ -1,26 +1,48 @@
-// Re-export Prisma types
-export type {
-  User,
-  Business,
-  Listing,
-  Booking,
-  Campaign,
-  Application,
-  Verification,
-  AIAnalysis,
-  Review,
-  UserRole,
-  VerificationStatus,
-  BusinessType,
-  ActivityType,
-  PaymentStatus,
-  BookingStatus,
-  CampaignStatus,
-  ApplicationStatus,
-  CollaborationType,
-  DocumentType,
-  EntityType,
-} from '@prisma/client'
+// Re-export Prisma types (commented out until database is set up)
+// export type {
+//   User,
+//   Business,
+//   Listing,
+//   Booking,
+//   Campaign,
+//   Application,
+//   Verification,
+//   AIAnalysis,
+//   Review,
+//   UserRole,
+//   VerificationStatus,
+//   BusinessType,
+//   ActivityType,
+//   PaymentStatus,
+//   BookingStatus,
+//   CampaignStatus,
+//   ApplicationStatus,
+//   CollaborationType,
+//   DocumentType,
+//   EntityType,
+// } from '@prisma/client'
+
+// Temporary type definitions
+export type User = any
+export type Business = any
+export type Listing = any
+export type Booking = any
+export type Campaign = any
+export type Application = any
+export type Verification = any
+export type AIAnalysis = any
+export type Review = any
+export type UserRole = any
+export type VerificationStatus = any
+export type BusinessType = any
+export type ActivityType = any
+export type PaymentStatus = any
+export type BookingStatus = any
+export type CampaignStatus = any
+export type ApplicationStatus = any
+export type CollaborationType = any
+export type DocumentType = any
+export type EntityType = any
 
 // Additional types for the application
 export interface TripPreferences {
