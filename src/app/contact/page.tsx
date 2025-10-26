@@ -198,36 +198,27 @@ export default function ContactPage() {
             {/* Contact Information */}
             <div className="space-y-8">
               <Card className="bg-gray-800 border-gray-700 p-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Office Hours</h3>
-                <div className="space-y-2 text-gray-300">
-                  <p><strong>Monday - Friday:</strong> 9:00 AM - 6:00 PM (GMT)</p>
-                  <p><strong>Saturday:</strong> 10:00 AM - 4:00 PM (GMT)</p>
-                  <p><strong>Sunday:</strong> Closed</p>
-                </div>
-              </Card>
-
-              <Card className="bg-gray-800 border-gray-700 p-6">
                 <h3 className="text-xl font-semibold text-white mb-4">Response Times</h3>
                 <div className="space-y-2 text-gray-300">
-                  <p><strong>General Inquiries:</strong> Within 24 hours</p>
-                  <p><strong>Technical Support:</strong> Within 12 hours</p>
+                  <p><strong>General Inquiries:</strong> Within 24-48 hours</p>
+                  <p><strong>Technical Support:</strong> Within 24 hours</p>
                   <p><strong>Business Inquiries:</strong> Within 48 hours</p>
                   <p><strong>Partnerships:</strong> Within 72 hours</p>
                 </div>
               </Card>
 
               <Card className="bg-gray-800 border-gray-700 p-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Other Ways to Connect</h3>
+                <h3 className="text-xl font-semibold text-white mb-4">Other Ways to Get Help</h3>
                 <div className="space-y-3">
                   <Link href="/faq" className="block text-yellow-400 hover:text-yellow-300 transition-colors">
                     📚 FAQ & Help Center
                   </Link>
                   <Link href="/help" className="block text-yellow-400 hover:text-yellow-300 transition-colors">
-                    🆘 Live Chat Support
+                    🆘 Help Center
                   </Link>
-                  <a href="#" className="block text-yellow-400 hover:text-yellow-300 transition-colors">
-                    📱 Follow us on Social Media
-                  </a>
+                  <Link href="/how-it-works" className="block text-yellow-400 hover:text-yellow-300 transition-colors">
+                    ℹ️ How It Works
+                  </Link>
                 </div>
               </Card>
             </div>

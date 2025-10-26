@@ -1,92 +1,62 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import SmartSearchBar from '@/components/SmartSearchBar'
 
 export default function HelpPage() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
-
-  const handleSearch = (query: string, results: any[]) => {
-    setSearchQuery(query)
-    setSearchResults(results)
-  }
-
-  const helpCategories = [
+  const helpSections = [
     {
-      title: 'Getting Started',
-      icon: '🚀',
-      articles: [
-        'How to create your first listing',
-        'Setting up your business profile',
-        'Understanding verification process',
-        'Adding photos and descriptions'
+      title: "Getting Started",
+      items: [
+        "How to create an account",
+        "Setting up your profile",
+        "Understanding user roles",
+        "Platform navigation basics"
       ]
     },
     {
-      title: 'Bookings & Payments',
-      icon: '💳',
-      articles: [
-        'How bookings work',
-        'Payment processing and security',
-        'Cancellation policies',
-        'Refund procedures'
+      title: "For Travelers",
+      items: [
+        "How to plan a trip with AI",
+        "Booking experiences",
+        "Managing your bookings",
+        "Writing reviews"
       ]
     },
     {
-      title: 'Campaigns & Collaborations',
-      icon: '🤝',
-      articles: [
-        'Creating influencer campaigns',
-        'Applying to campaigns',
-        'Campaign projections and ROI',
-        'Content delivery and approval'
+      title: "For Businesses",
+      items: [
+        "Listing your business",
+        "Verification process",
+        "Managing bookings",
+        "Analytics and insights"
       ]
     },
     {
-      title: 'Account & Security',
-      icon: '🔒',
-      articles: [
-        'Managing your account',
-        'Password and security',
-        'Notification preferences',
-        'Data privacy and GDPR'
+      title: "For Influencers",
+      items: [
+        "Creating campaigns",
+        "Finding collaborations",
+        "Managing applications",
+        "Content guidelines"
       ]
-    }
-  ]
-
-  const popularArticles = [
-    'How do I get my business verified?',
-    'What commission does AFRICONNECT take?',
-    'How do I optimize my listings for better visibility?',
-    'Can I work with influencers through AFRICONNECT?',
-    'How do I get paid for bookings?',
-    'What makes AFRICONNECT different from other platforms?',
-    'How does the AI trip planning work?',
-    'Is my payment information secure?'
-  ]
-
-  const contactOptions = [
-    {
-      title: 'Live Chat',
-      description: 'Get instant help from our support team',
-      icon: '💬',
-      action: 'Start Chat'
     },
     {
-      title: 'Email Support',
-      description: 'Send us a detailed message',
-      icon: '📧',
-      action: 'Send Email'
+      title: "Account & Billing",
+      items: [
+        "Payment methods",
+        "Billing questions",
+        "Account settings",
+        "Privacy and security"
+      ]
     },
     {
-      title: 'Video Call',
-      description: 'Schedule a one-on-one session',
-      icon: '📹',
-      action: 'Schedule Call'
+      title: "Technical Support",
+      items: [
+        "Browser compatibility",
+        "Mobile app issues",
+        "Performance problems",
+        "Error troubleshooting"
+      ]
     }
   ]
 
@@ -107,124 +77,108 @@ export default function HelpPage() {
               <Link href="/influencers" className="text-gray-600 hover:text-yellow-600 transition-colors">For Influencers</Link>
             </nav>
             <div className="flex space-x-4">
-              <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Profile</Button>
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Sign Out</Button>
+              <Link href="/auth/sign-in">
+                <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Sign In</Button>
+              </Link>
+              <Link href="/auth/sign-up">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Get Started</Button>
+              </Link>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">Help Center</h1>
-          <p className="text-xl text-gray-300">Find answers, get support, and learn how to make the most of AFRICONNECT</p>
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-yellow-600/20 via-orange-500/30 to-red-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            Help <span className="text-yellow-400">Center</span>
+          </h1>
+          <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
+            Find answers to common questions and get support for your AFRICONNECT experience
+          </p>
         </div>
+      </section>
 
-        {/* Search Bar */}
-        <div className="mb-12">
-          <SmartSearchBar
-            onSearch={handleSearch}
-            placeholder="Search for help articles, guides, and FAQs..."
-            className="max-w-2xl mx-auto"
-          />
-        </div>
-
-        {/* Search Results */}
-        {searchResults.length > 0 && (
-          <Card className="bg-gray-800 border-gray-700 p-6 mb-8">
-            <h2 className="text-xl font-semibold text-white mb-4">Search Results for "{searchQuery}"</h2>
-            <div className="space-y-3">
-              {searchResults.map((result, index) => (
-                <div key={index} className="p-4 bg-gray-700 rounded hover:bg-gray-600 transition-colors cursor-pointer">
-                  <h3 className="text-white font-medium">{result.title}</h3>
-                  <p className="text-sm text-gray-400">{result.description}</p>
-                </div>
-              ))}
+      {/* Search Bar */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Card className="bg-gray-800 border-gray-700 p-6">
+            <div className="text-center">
+              <h2 className="text-2xl font-semibold text-white mb-4">Search for Help</h2>
+              <div className="flex gap-2 max-w-2xl mx-auto">
+                <input
+                  type="text"
+                  placeholder="Search for help articles, guides, and FAQs..."
+                  className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black px-6">
+                  Search
+                </Button>
+              </div>
             </div>
           </Card>
-        )}
+        </div>
+      </section>
 
-        {/* Help Categories */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {helpCategories.map((category, index) => (
-            <Card key={index} className="bg-gray-800 border-gray-700 p-6 hover:bg-gray-700 transition-colors cursor-pointer">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">{category.icon}</span>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-3">{category.title}</h3>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  {category.articles.map((article, articleIndex) => (
-                    <li key={articleIndex} className="text-left">
-                      • {article}
+      {/* Help Sections */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-white mb-4">Browse Help Topics</h2>
+            <p className="text-xl text-gray-300">Find the information you need quickly</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {helpSections.map((section, index) => (
+              <Card key={index} className="bg-gray-800 border-gray-700 p-6 hover:border-yellow-500/50 transition-all duration-300">
+                <h3 className="text-xl font-semibold text-white mb-4">{section.title}</h3>
+                <ul className="space-y-2">
+                  {section.items.map((item, itemIndex) => (
+                    <li key={itemIndex}>
+                      <a href="#" className="text-gray-300 hover:text-yellow-400 transition-colors text-sm">
+                        {item}
+                      </a>
                     </li>
                   ))}
                 </ul>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* Popular Articles */}
-        <Card className="bg-gray-800 border-gray-700 p-6 mb-12">
-          <h2 className="text-xl font-semibold text-white mb-6">Popular Help Articles</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {popularArticles.map((article, index) => (
-              <div key={index} className="p-4 bg-gray-700 rounded hover:bg-gray-600 transition-colors cursor-pointer">
-                <h3 className="text-white font-medium">{article}</h3>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Contact Support */}
-        <Card className="bg-gray-800 border-gray-700 p-6 mb-12">
-          <h2 className="text-xl font-semibold text-white mb-6">Still Need Help?</h2>
-          <p className="text-gray-300 mb-6">Our support team is here to help you succeed on AFRICONNECT</p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {contactOptions.map((option, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">{option.icon}</span>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{option.title}</h3>
-                <p className="text-gray-400 mb-4">{option.description}</p>
-                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
-                  {option.action}
+      {/* Contact Support */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">Still Need Help?</h2>
+            <p className="text-xl text-gray-300 mb-8">We're here to assist you with any questions or issues</p>
+            
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <Card className="bg-gray-800 border-gray-700 p-6">
+                <h3 className="text-xl font-semibold text-white mb-4">General Support</h3>
+                <p className="text-gray-300 mb-4">
+                  For general questions about using the platform, account issues, or technical problems.
+                </p>
+                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black">
+                  Contact Support
                 </Button>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Video Tutorials */}
-        <Card className="bg-gray-800 border-gray-700 p-6">
-          <h2 className="text-xl font-semibold text-white mb-6">Video Tutorials</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-gray-700 p-4 rounded">
-              <div className="w-full h-32 bg-gray-600 rounded mb-3 flex items-center justify-center">
-                <span className="text-4xl">▶️</span>
-              </div>
-              <h3 className="text-white font-medium mb-2">Getting Started Guide</h3>
-              <p className="text-sm text-gray-400">Learn the basics of using AFRICONNECT</p>
-            </div>
-            <div className="bg-gray-700 p-4 rounded">
-              <div className="w-full h-32 bg-gray-600 rounded mb-3 flex items-center justify-center">
-                <span className="text-4xl">▶️</span>
-              </div>
-              <h3 className="text-white font-medium mb-2">Creating Your First Listing</h3>
-              <p className="text-sm text-gray-400">Step-by-step guide to listing your business</p>
-            </div>
-            <div className="bg-gray-700 p-4 rounded">
-              <div className="w-full h-32 bg-gray-600 rounded mb-3 flex items-center justify-center">
-                <span className="text-4xl">▶️</span>
-              </div>
-              <h3 className="text-white font-medium mb-2">AI Features Overview</h3>
-              <p className="text-sm text-gray-400">Discover how AI can help your business</p>
+              </Card>
+              
+              <Card className="bg-gray-800 border-gray-700 p-6">
+                <h3 className="text-xl font-semibold text-white mb-4">Business Support</h3>
+                <p className="text-gray-300 mb-4">
+                  For business-specific questions about listings, verification, or collaboration features.
+                </p>
+                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black">
+                  Business Support
+                </Button>
+              </Card>
             </div>
           </div>
-        </Card>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }
