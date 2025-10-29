@@ -74,12 +74,12 @@ export default function SmartSearchBar({
       if (response.success) {
         const aiSuggestions = response.data.split('\n')
           .slice(0, 5)
-          .map((suggestion, index) => ({
+          .map((suggestion: string, index: number) => ({
             id: `ai-${index}`,
             text: suggestion.trim(),
             type: 'general' as const
           }))
-          .filter(s => s.text.length > 0)
+          .filter((s: { text: string }) => s.text.length > 0)
 
         setSuggestions(aiSuggestions)
       } else {
