@@ -36,11 +36,12 @@ export default function PlanTripPage() {
         body: JSON.stringify({ preferences }),
       })
       
-      if (response.ok) {
-        const data = await response.json()
+      const data = await response.json()
+      if (response.ok && data && data.itinerary) {
         setItinerary(data.itinerary)
       } else {
-        console.error('Failed to generate itinerary')
+        setItinerary(null)
+        console.warn(data?.message || 'No verified results match your search.')
       }
     } catch (error) {
       console.error('Error generating itinerary:', error)
@@ -212,6 +213,16 @@ export default function PlanTripPage() {
       </section>
 
       {/* Results Section */}
+      {!isGenerating && !itinerary && (
+        <section className="py-12 bg-gradient-to-b from-black to-gray-900">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Card className="bg-gray-800 border-gray-700 p-6 text-center">
+              <p className="text-gray-300">No verified results match your search.</p>
+            </Card>
+          </div>
+        </section>
+      )}
+
       {itinerary && (
         <section className="py-20 bg-gradient-to-b from-black to-gray-900">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

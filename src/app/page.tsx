@@ -591,29 +591,18 @@ export default function Home() {
             <p className="text-xl text-gray-300">Connecting communities and supporting local economies</p>
           </div>
           
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">500+</div>
-              <p className="text-white font-semibold">Verified Businesses</p>
-              <p className="text-gray-300 text-sm">Across 15 African countries</p>
+              <p className="text-white font-semibold mb-2">Built on verified local partners</p>
+              <p className="text-gray-300 text-sm">We only surface experiences from verified businesses.</p>
             </div>
-            
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">10K+</div>
-              <p className="text-white font-semibold">Happy Travelers</p>
-              <p className="text-gray-300 text-sm">Authentic experiences delivered</p>
+              <p className="text-white font-semibold mb-2">Real data, no inflated claims</p>
+              <p className="text-gray-300 text-sm">Stats will appear here as your community grows.</p>
             </div>
-            
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">$2M+</div>
-              <p className="text-white font-semibold">Revenue Generated</p>
-              <p className="text-gray-300 text-sm">For local communities</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">4.8★</div>
-              <p className="text-white font-semibold">Average Rating</p>
-              <p className="text-gray-300 text-sm">From verified reviews</p>
+              <p className="text-white font-semibold mb-2">Transparent by design</p>
+              <p className="text-gray-300 text-sm">If there’s no data yet, we say so.</p>
             </div>
           </div>
         </div>

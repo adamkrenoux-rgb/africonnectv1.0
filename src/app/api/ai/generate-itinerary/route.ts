@@ -19,8 +19,9 @@ export async function POST(request: NextRequest) {
     
     if (verifiedBusinesses.length === 0) {
       return NextResponse.json({
-        success: false,
-        message: 'No verified results match your search. Please try a different destination or check back later as we verify more businesses.'
+        success: true,
+        itinerary: null,
+        message: 'No verified results match your search.'
       })
     }
 

@@ -8,52 +8,12 @@ import { Card } from '@/components/ui/card'
 export default function BusinessListingsPage() {
   const [activeTab, setActiveTab] = useState('active')
 
-  // Mock listings data - in real app this would come from API
-  const listings = [
-    {
-      id: '1',
-      title: 'Maasai Mara Safari Adventure',
-      type: 'Safari',
-      price: 450,
-      duration: '3 days',
-      status: 'Active',
-      views: 234,
-      bookings: 12,
-      revenue: 5400,
-      rating: 4.9,
-      reviews: 8
-    },
-    {
-      id: '2',
-      title: 'Cultural Village Experience',
-      type: 'Cultural',
-      price: 95,
-      duration: '1 day',
-      status: 'Active',
-      views: 156,
-      bookings: 5,
-      revenue: 475,
-      rating: 4.7,
-      reviews: 3
-    },
-    {
-      id: '3',
-      title: 'Nairobi City Tour',
-      type: 'City Tour',
-      price: 80,
-      duration: '1 day',
-      status: 'Draft',
-      views: 0,
-      bookings: 0,
-      revenue: 0,
-      rating: 0,
-      reviews: 0
-    }
-  ]
+  // No mock data — will be fetched from API; keep empty to avoid fake stats
+  const listings: Array<any> = []
 
   const filteredListings = activeTab === 'all' 
     ? listings 
-    : listings.filter(listing => listing.status.toLowerCase() === activeTab)
+    : listings.filter(listing => (listing.status || '').toLowerCase() === activeTab)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
