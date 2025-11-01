@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, createBusinessSchema } from '@/lib/validation'
 
 // GET /api/businesses - Get all businesses with filters
 export async function GET(request: NextRequest) {
@@ -10,10 +11,18 @@ export async function GET(request: NextRequest) {
     const businessType = searchParams.get('type')
     const limit = searchParams.get('limit')
 
+    // Validate and sanitize inputs
     const where: any = {}
-    if (verified) where.verificationBadge = verified === 'true'
-    if (country) where.country = country
-    if (businessType) where.businessType = businessType
+    if (verified) {
+      const verifiedValue = verified === 'true'
+      where.verificationBadge = verifiedValue
+    }
+    if (country) {
+      where.country = country.trim()
+    }
+    if (businessType) {
+      where.businessType = businessType.trim().toUpperCase()
+    }
 
     const businesses = await prisma.business.findMany({
       where,
@@ -43,7 +52,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: 'desc'
       },
-      ...(limit && { take: parseInt(limit) })
+      ...(limit && { take: Math.min(parseInt(limit) || 100, 100) }) // Max 100 items
     })
 
     // Calculate average ratings
@@ -73,42 +82,47 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const {
-      userId,
-      businessName,
-      description,
-      location,
-      city,
-      country,
-      coordinates,
-      businessType,
-      website,
-      phone,
-      email
-    } = body
 
-    // Validate required fields
-    if (!userId || !businessName || !description || !location || !city || !country || !businessType) {
+    // Validate request body
+    const validation = await validateRequest(createBusinessSchema, body)
+    if (!validation.success) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: validation.error, details: validation.details },
         { status: 400 }
       )
     }
 
+    const data = validation.data
+
+    // Verify user exists
+    const user = await prisma.user.findUnique({
+      where: { id: data.userId }
+    })
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      )
+    }
+
+    // Check if user already has a business (optional: allow multiple businesses)
+    // For now, we'll allow multiple businesses per user
+
     // Create business
     const business = await prisma.business.create({
       data: {
-        userId,
-        businessName,
-        description,
-        location,
-        city,
-        country,
-        coordinates,
-        businessType,
-        website,
-        phone,
-        email
+        userId: data.userId,
+        businessName: data.businessName.trim(),
+        description: data.description.trim(),
+        location: data.location.trim(),
+        city: data.city.trim(),
+        country: data.country.trim(),
+        coordinates: data.coordinates || null,
+        businessType: data.businessType,
+        website: data.website || null,
+        phone: data.phone || null,
+        email: data.email || null
       },
       include: {
         user: {
@@ -122,10 +136,23 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ success: true, business }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating business:', error)
+    
+    // Handle Prisma unique constraint errors
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { success: false, error: 'Business with this information already exists' },
+        { status: 409 }
+      )
+    }
+
     return NextResponse.json(
-      { success: false, error: 'Failed to create business' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to create business',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

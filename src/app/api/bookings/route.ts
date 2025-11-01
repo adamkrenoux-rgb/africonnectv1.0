@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, createBookingSchema } from '@/lib/validation'
 
 // GET /api/bookings - Get all bookings with filters
 export async function GET(request: NextRequest) {
@@ -67,21 +68,23 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+
+    // Validate request body
+    const validation = await validateRequest(createBookingSchema, body)
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error, details: validation.details },
+        { status: 400 }
+      )
+    }
+
     const {
       listingId,
       travelerId,
       bookingDate,
       totalAmount,
       stripePaymentIntentId
-    } = body
-
-    // Validate required fields
-    if (!listingId || !travelerId || !bookingDate || !totalAmount) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
+    } = validation.data
 
     // Get listing and verify it exists
     const listing = await prisma.listing.findUnique({
@@ -136,10 +139,30 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ success: true, booking }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating booking:', error)
+    
+    // Handle Prisma errors
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { success: false, error: 'Booking already exists' },
+        { status: 409 }
+      )
+    }
+    
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid listing or traveler reference' },
+        { status: 400 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to create booking' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to create booking',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

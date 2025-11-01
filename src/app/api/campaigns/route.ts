@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, createCampaignSchema } from '@/lib/validation'
 
 // GET /api/campaigns - Get all campaigns with filters
 export async function GET(request: NextRequest) {
@@ -70,6 +71,16 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+
+    // Validate request body
+    const validation = await validateRequest(createCampaignSchema, body)
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error, details: validation.details },
+        { status: 400 }
+      )
+    }
+
     const {
       influencerId,
       title,
@@ -79,15 +90,7 @@ export async function POST(request: NextRequest) {
       audienceDemographics,
       collaborationTerms,
       status
-    } = body
-
-    // Validate required fields
-    if (!influencerId || !title || !description || !targetRegion || !deliverables) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
+    } = validation.data
 
     // Verify user is an influencer
     const user = await prisma.user.findUnique({
@@ -125,10 +128,30 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ success: true, campaign }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating campaign:', error)
+    
+    // Handle Prisma errors
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { success: false, error: 'Campaign with this information already exists' },
+        { status: 409 }
+      )
+    }
+    
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid influencer reference' },
+        { status: 400 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to create campaign' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to create campaign',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

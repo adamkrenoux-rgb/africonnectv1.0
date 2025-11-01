@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, createReviewSchema } from '@/lib/validation'
 
 // GET /api/reviews - Get all reviews with filters
 export async function GET(request: NextRequest) {
@@ -68,29 +69,23 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+
+    // Validate request body
+    const validation = await validateRequest(createReviewSchema, body)
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error, details: validation.details },
+        { status: 400 }
+      )
+    }
+
     const {
       bookingId,
       travelerId,
       businessId,
       rating,
       comment
-    } = body
-
-    // Validate required fields
-    if (!bookingId || !travelerId || !businessId || !rating) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
-    // Validate rating range
-    if (rating < 1 || rating > 5) {
-      return NextResponse.json(
-        { success: false, error: 'Rating must be between 1 and 5' },
-        { status: 400 }
-      )
-    }
+    } = validation.data
 
     // Verify booking exists and is completed
     const booking = await prisma.booking.findUnique({
@@ -163,10 +158,30 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ success: true, review }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating review:', error)
+    
+    // Handle Prisma errors
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { success: false, error: 'Review already exists for this booking' },
+        { status: 409 }
+      )
+    }
+    
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid booking, traveler, or business reference' },
+        { status: 400 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to create review' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to create review',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

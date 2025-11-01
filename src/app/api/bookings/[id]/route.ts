@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, updateBookingSchema } from '@/lib/validation'
 
 // GET /api/bookings/[id] - Get a specific booking
 export async function GET(
@@ -63,7 +64,29 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json()
-    const { status, paymentStatus } = body
+
+    // Validate request body
+    const validation = await validateRequest(updateBookingSchema, { ...body, id: params.id })
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error, details: validation.details },
+        { status: 400 }
+      )
+    }
+
+    // Check if booking exists
+    const existingBooking = await prisma.booking.findUnique({
+      where: { id: params.id }
+    })
+
+    if (!existingBooking) {
+      return NextResponse.json(
+        { success: false, error: 'Booking not found' },
+        { status: 404 }
+      )
+    }
+
+    const { status, paymentStatus } = validation.data
 
     const booking = await prisma.booking.update({
       where: { id: params.id },
@@ -98,10 +121,22 @@ export async function PATCH(
     }
 
     return NextResponse.json({ success: true, booking }, { status: 200 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating booking:', error)
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, error: 'Booking not found' },
+        { status: 404 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to update booking' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to update booking',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }
@@ -145,10 +180,22 @@ export async function DELETE(
       { success: true, message: 'Booking cancelled successfully' },
       { status: 200 }
     )
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error cancelling booking:', error)
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, error: 'Booking not found' },
+        { status: 404 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to cancel booking' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to cancel booking',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

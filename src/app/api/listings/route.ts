@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, createListingSchema } from '@/lib/validation'
 
 // GET /api/listings - Get all listings with filters
 export async function GET(request: NextRequest) {
@@ -16,9 +17,10 @@ export async function GET(request: NextRequest) {
     if (activityType) where.activityType = activityType
     if (businessId) where.businessId = businessId
     if (search) {
+      const sanitizedSearch = search.trim().slice(0, 100) // Limit search length
       where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
+        { title: { contains: sanitizedSearch, mode: 'insensitive' } },
+        { description: { contains: sanitizedSearch, mode: 'insensitive' } }
       ]
     }
 
@@ -51,7 +53,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: 'desc'
       },
-      ...(limit && { take: parseInt(limit) })
+      ...(limit && { take: Math.min(parseInt(limit) || 100, 100) }) // Max 100 items
     })
 
     // Calculate stats for each listing
@@ -81,29 +83,21 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const {
-      businessId,
-      title,
-      description,
-      pricing,
-      duration,
-      activityType,
-      tags,
-      maxCapacity,
-      availability
-    } = body
 
-    // Validate required fields
-    if (!businessId || !title || !description || !pricing || !duration || !activityType) {
+    // Validate request body
+    const validation = await validateRequest(createListingSchema, body)
+    if (!validation.success) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: validation.error, details: validation.details },
         { status: 400 }
       )
     }
 
+    const data = validation.data
+
     // Verify business exists
     const business = await prisma.business.findUnique({
-      where: { id: businessId }
+      where: { id: data.businessId }
     })
 
     if (!business) {
@@ -116,15 +110,15 @@ export async function POST(request: NextRequest) {
     // Create listing
     const listing = await prisma.listing.create({
       data: {
-        businessId,
-        title,
-        description,
-        pricing,
-        duration,
-        activityType,
-        tags: tags || [],
-        maxCapacity: maxCapacity || 1,
-        availability,
+        businessId: data.businessId,
+        title: data.title.trim(),
+        description: data.description.trim(),
+        pricing: data.pricing,
+        duration: data.duration.trim(),
+        activityType: data.activityType,
+        tags: data.tags || [],
+        maxCapacity: data.maxCapacity || 1,
+        availability: data.availability || null,
         verified: business.verificationBadge // Auto-verify if business is verified
       },
       include: {
@@ -142,10 +136,30 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ success: true, listing }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating listing:', error)
+    
+    // Handle Prisma errors
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { success: false, error: 'Listing with this information already exists' },
+        { status: 409 }
+      )
+    }
+    
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid business reference' },
+        { status: 400 }
+      )
+    }
+
     return NextResponse.json(
-      { success: false, error: 'Failed to create listing' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to create listing',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

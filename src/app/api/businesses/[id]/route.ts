@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, updateBusinessSchema } from '@/lib/validation'
 
 // GET /api/businesses/[id] - Get a specific business
 export async function GET(
@@ -83,6 +84,28 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json()
+
+    // Validate request body
+    const validation = await validateRequest(updateBusinessSchema, { ...body, id: params.id })
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error, details: validation.details },
+        { status: 400 }
+      )
+    }
+
+    // Check if business exists
+    const existingBusiness = await prisma.business.findUnique({
+      where: { id: params.id }
+    })
+
+    if (!existingBusiness) {
+      return NextResponse.json(
+        { success: false, error: 'Business not found' },
+        { status: 404 }
+      )
+    }
+
     const {
       businessName,
       description,
@@ -94,7 +117,7 @@ export async function PATCH(
       website,
       phone,
       email
-    } = body
+    } = validation.data
 
     const business = await prisma.business.update({
       where: { id: params.id },
@@ -122,10 +145,22 @@ export async function PATCH(
     })
 
     return NextResponse.json({ success: true, business }, { status: 200 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating business:', error)
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, error: 'Business not found' },
+        { status: 404 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to update business' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to update business',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }
@@ -137,6 +172,21 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Check if business has active bookings
+    const activeBookings = await prisma.booking.findFirst({
+      where: {
+        businessId: params.id,
+        status: { in: ['PENDING', 'CONFIRMED'] }
+      }
+    })
+
+    if (activeBookings) {
+      return NextResponse.json(
+        { success: false, error: 'Cannot delete business with active bookings' },
+        { status: 400 }
+      )
+    }
+
     await prisma.business.delete({
       where: { id: params.id }
     })
@@ -145,10 +195,22 @@ export async function DELETE(
       { success: true, message: 'Business deleted successfully' },
       { status: 200 }
     )
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting business:', error)
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, error: 'Business not found' },
+        { status: 404 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to delete business' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to delete business',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, createApplicationSchema } from '@/lib/validation'
 
 // GET /api/applications - Get all applications with filters
 export async function GET(request: NextRequest) {
@@ -83,21 +84,23 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+
+    // Validate request body
+    const validation = await validateRequest(createApplicationSchema, body)
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error, details: validation.details },
+        { status: 400 }
+      )
+    }
+
     const {
       campaignId,
       businessId,
       proposalText,
       contentSamples,
       proposedPrice
-    } = body
-
-    // Validate required fields
-    if (!campaignId || !businessId || !proposalText) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
+    } = validation.data
 
     // Verify campaign exists and is open
     const campaign = await prisma.campaign.findUnique({
@@ -166,10 +169,30 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ success: true, application }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating application:', error)
+    
+    // Handle Prisma errors
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { success: false, error: 'Application already exists' },
+        { status: 409 }
+      )
+    }
+    
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid campaign or business reference' },
+        { status: 400 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to create application' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to create application',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { validateRequest, updateListingSchema } from '@/lib/validation'
 
 // GET /api/listings/[id] - Get a specific listing
 export async function GET(
@@ -88,6 +89,28 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json()
+
+    // Validate request body
+    const validation = await validateRequest(updateListingSchema, { ...body, id: params.id })
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error, details: validation.details },
+        { status: 400 }
+      )
+    }
+
+    // Check if listing exists
+    const existingListing = await prisma.listing.findUnique({
+      where: { id: params.id }
+    })
+
+    if (!existingListing) {
+      return NextResponse.json(
+        { success: false, error: 'Listing not found' },
+        { status: 404 }
+      )
+    }
+
     const {
       title,
       description,
@@ -97,7 +120,7 @@ export async function PATCH(
       tags,
       maxCapacity,
       availability
-    } = body
+    } = validation.data
 
     const listing = await prisma.listing.update({
       where: { id: params.id },
@@ -122,10 +145,22 @@ export async function PATCH(
     })
 
     return NextResponse.json({ success: true, listing }, { status: 200 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating listing:', error)
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, error: 'Listing not found' },
+        { status: 404 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to update listing' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to update listing',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }
@@ -160,10 +195,22 @@ export async function DELETE(
       { success: true, message: 'Listing deleted successfully' },
       { status: 200 }
     )
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting listing:', error)
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, error: 'Listing not found' },
+        { status: 404 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to delete listing' },
+      { 
+        success: false, 
+        error: error.message || 'Failed to delete listing',
+        ...(process.env.NODE_ENV === 'development' && { details: error })
+      },
       { status: 500 }
     )
   }

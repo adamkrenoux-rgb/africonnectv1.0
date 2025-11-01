@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { aiHelper } from '@/lib/ai-helper'
 import mockResponses from '@/lib/ai-mock-responses'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,23 +15,61 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Check if we have verified businesses for this destination
-    const verifiedBusinesses: any[] = [] // Will be populated from database later
+    // Query for verified businesses in the specified destination
+    const verifiedBusinesses = await prisma.business.findMany({
+      where: {
+        OR: [
+          { location: { contains: preferences.destination, mode: 'insensitive' } },
+          { city: { contains: preferences.destination, mode: 'insensitive' } },
+          { country: { contains: preferences.destination, mode: 'insensitive' } }
+        ],
+        verificationBadge: true // Only consider verified businesses
+      },
+      include: {
+        listings: {
+          where: {
+            verified: true // Only include verified listings
+          },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            activityType: true,
+            pricing: true,
+            duration: true,
+            tags: true
+          }
+        },
+        user: {
+          select: {
+            name: true,
+            profilePicture: true
+          }
+        },
+        reviews: {
+          select: {
+            rating: true,
+            comment: true
+          }
+        }
+      },
+      take: 20 // Limit to 20 businesses for performance
+    })
     
     if (verifiedBusinesses.length === 0) {
       return NextResponse.json({
         success: true,
         itinerary: null,
-        message: 'No verified results match your search.'
+        message: 'No verified results match your search. Please try a different destination or check back later as we verify more businesses.'
       })
     }
 
     // Generate AI-powered itinerary
-    const prompt = `Create a detailed ${preferences.duration} day itinerary for ${preferences.destination} with a budget of $${preferences.budget}. 
-    Activities: ${preferences.activities || 'general tourism'}. 
-    Interests: ${preferences.interests || 'culture and wildlife'}. 
-    Group size: ${preferences.groupSize || '2 people'}. 
-    Travel dates: ${preferences.travelDates || 'flexible'}. 
+    const prompt = `Create a detailed ${preferences.duration} day itinerary for ${preferences.destination} with a budget of $${preferences.budget}.
+    Activities: ${preferences.activities || 'general tourism'}.
+    Interests: ${preferences.interests || 'culture and wildlife'}.
+    Group size: ${preferences.groupSize || '2 people'}.
+    Travel dates: ${preferences.travelDates || 'flexible'}.
     
     Include:
     1. Day-by-day detailed itinerary with activities, meals, and accommodation
@@ -40,7 +79,21 @@ export async function POST(request: NextRequest) {
     5. Local tips and cultural insights
     6. Alternative options for each day
     
-    Focus on authentic local experiences and verified businesses only.`
+    Focus on authentic local experiences and verified businesses only.
+    
+    Consider these verified businesses and their listings for the itinerary:
+    ${JSON.stringify(verifiedBusinesses.map(b => ({
+      businessName: b.businessName,
+      description: b.description,
+      businessType: b.businessType,
+      location: b.location,
+      city: b.city,
+      country: b.country,
+      listings: b.listings,
+      averageRating: b.reviews.length > 0 
+        ? b.reviews.reduce((sum, r) => sum + r.rating, 0) / b.reviews.length 
+        : 0
+    })), null, 2)}`
 
     const aiResponse = await aiHelper.generateResponse({
       prompt,
