@@ -129,6 +129,16 @@ export const updateReviewSchema = z.object({
 })
 
 // User validation schemas
+export const createUserSchema = z.object({
+  clerkId: z.string().optional(),
+  email: z.string().email('Invalid email address').min(1, 'Email is required'),
+  name: z.string().max(200).optional(),
+  role: z.enum(['TRAVELER', 'BUSINESS', 'INFLUENCER', 'ADMIN']).optional().default('TRAVELER'),
+  profilePicture: z.string().url().optional().or(z.literal('')),
+  bio: z.string().max(1000).optional(),
+  country: z.string().optional()
+})
+
 export const updateUserSchema = z.object({
   id: z.string().min(1, 'User ID is required'),
   name: z.string().max(200).optional(),
