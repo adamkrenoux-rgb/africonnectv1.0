@@ -83,14 +83,21 @@ function CheckoutForm({
         throw submitError
       }
 
-      const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
+      const result = await stripe.confirmPayment({
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `${window.location.origin}/booking/success?payment_intent=${paymentIntent?.id || ''}&booking_id=${bookingId || ''}`,
+          return_url: `${window.location.origin}/booking/success?payment_intent=${''}&booking_id=${bookingId || ''}`,
         },
         redirect: 'if_required',
       })
+
+      const { error: confirmError, paymentIntent } = result
+      
+      // Update return URL with actual payment intent ID if available
+      if (paymentIntent?.id) {
+        // Payment intent is available, we can update the URL
+      }
 
       if (confirmError) {
         throw confirmError

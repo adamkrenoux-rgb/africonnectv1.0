@@ -1,13 +1,21 @@
 /**
  * Sentry client-side configuration
  * This file is used by the Sentry Next.js SDK
+ * Optional dependency - gracefully handles if package is not installed
  */
 
-import * as Sentry from '@sentry/nextjs'
+let Sentry: any = null
+
+try {
+  Sentry = require('@sentry/nextjs')
+} catch (error) {
+  // Sentry is optional
+  console.warn('Sentry not installed. Install with: npm install @sentry/nextjs')
+}
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN
 
-if (SENTRY_DSN) {
+if (SENTRY_DSN && Sentry) {
   Sentry.init({
     dsn: SENTRY_DSN,
     environment: process.env.NODE_ENV || 'development',

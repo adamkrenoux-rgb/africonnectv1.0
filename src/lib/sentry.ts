@@ -1,18 +1,24 @@
 /**
  * Sentry Error Monitoring Setup
- * Falls back gracefully if SENTRY_DSN is not configured
+ * Falls back gracefully if SENTRY_DSN is not configured or package is not installed
  */
 
 let Sentry: any = null
 let isInitialized = false
 
-// Initialize Sentry only if DSN is provided
+// Initialize Sentry only if DSN is provided and package is installed
 if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_SENTRY_DSN) {
   try {
+    // Dynamic import to handle optional dependency
     Sentry = require('@sentry/nextjs')
-    isInitialized = true
+    if (Sentry && Sentry.init) {
+      isInitialized = true
+    }
   } catch (error) {
-    console.warn('Sentry not installed. Install with: npm install @sentry/nextjs')
+    // Sentry is optional - gracefully fail
+    console.warn('Sentry not available. Install with: npm install @sentry/nextjs')
+    Sentry = null
+    isInitialized = false
   }
 }
 
@@ -29,7 +35,7 @@ export const initSentry = () => {
         environment: process.env.NODE_ENV || 'development',
         tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
         // Only send errors in production
-        beforeSend(event, hint) {
+        beforeSend(event: any, hint: any) {
           if (process.env.NODE_ENV !== 'production') {
             console.error('Sentry Event (dev mode):', event, hint)
             return null // Don't send in dev

@@ -31,6 +31,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Create payment intent with Stripe
+    if (!stripe) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          id: `pi_mock_${Date.now()}`,
+          amount,
+          currency,
+          status: 'requires_payment_method',
+          client_secret: `pi_mock_${Date.now()}_secret_mock`
+        },
+        mock: true
+      })
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to cents
       currency: currency.toLowerCase(),

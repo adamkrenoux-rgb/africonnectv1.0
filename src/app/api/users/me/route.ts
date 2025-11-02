@@ -3,6 +3,9 @@ import { currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
 import { UserRole } from '@prisma/client'
 
+// Mark as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+
 // GET /api/users/me - Get current user's database record
 export async function GET(request: NextRequest) {
   try {

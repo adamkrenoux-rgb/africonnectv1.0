@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { currentUser } from '@clerk/nextjs/server'
 
+// Mark as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     // Check if user is admin (you can add role check here)
