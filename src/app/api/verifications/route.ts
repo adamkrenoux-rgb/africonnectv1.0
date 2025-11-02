@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
   try {
@@ -6,13 +7,41 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status')
     const businessId = searchParams.get('businessId')
 
-    // Mock verifications for demo
-    const verifications: any[] = []
+    const where: any = {}
+    if (status) {
+      where.status = status
+    }
+    if (businessId) {
+      where.businessId = businessId
+    }
 
-    return NextResponse.json({ success: true, data: verifications })
+    const verifications = await prisma.verification.findMany({
+      where,
+      include: {
+        business: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    return NextResponse.json({ success: true, verifications })
   } catch (error) {
     console.error('Error fetching verifications:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch verifications' },
+      { status: 500 }
+    )
   }
 }
 
