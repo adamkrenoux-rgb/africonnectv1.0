@@ -1,12 +1,25 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ClerkProvider } from '@clerk/nextjs'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import Footer from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
+
+// Conditionally import and use ClerkProvider
+let ClerkProvider: any = ({ children }: { children: React.ReactNode }) => <>{children}</>
+
+// Only use Clerk if keys are configured
+if (typeof process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'undefined' && 
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== '') {
+  try {
+    const clerk = require('@clerk/nextjs')
+    ClerkProvider = clerk.ClerkProvider
+  } catch (error) {
+    console.warn('Clerk not available, running without authentication')
+  }
+}
 
 export const metadata: Metadata = {
   title: 'AFRICONNECT - Authentic African Travel & Influencer Collaborations',
