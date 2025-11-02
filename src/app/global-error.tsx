@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { captureException } from '@/lib/sentry'
 
 export default function GlobalError({
   error,
@@ -12,35 +11,56 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error('Global error:', error)
+    captureException(error, {
+      component: 'GlobalErrorBoundary',
+      digest: error.digest,
+    })
   }, [error])
 
   return (
     <html>
       <body>
-        <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4">
-          <Card className="bg-gray-800 border-gray-700 p-8 max-w-md w-full text-center">
-            <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-2xl">⚠️</span>
-            </div>
-            
-            <h2 className="text-2xl font-bold text-white mb-4">Critical Error</h2>
-            <p className="text-gray-300 mb-6">
-              A critical error occurred. Please reload the page.
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(to bottom right, #000, #1f2937)',
+          color: 'white',
+          padding: '20px',
+          fontFamily: 'system-ui, sans-serif'
+        }}>
+          <div style={{
+            background: '#1f2937',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '8px',
+            padding: '32px',
+            maxWidth: '500px',
+            textAlign: 'center'
+          }}>
+            <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+              Application Error
+            </h2>
+            <p style={{ color: '#9ca3af', marginBottom: '24px' }}>
+              A critical error occurred. We've been notified and are working on a fix.
             </p>
-            
-            <div className="space-y-3">
-              <Button 
-                onClick={() => window.location.reload()}
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
-              >
-                Reload Page
-              </Button>
-            </div>
-          </Card>
+            <button
+              onClick={reset}
+              style={{
+                background: '#f59e0b',
+                color: '#000',
+                border: 'none',
+                borderRadius: '6px',
+                padding: '12px 24px',
+                fontWeight: 'semibold',
+                cursor: 'pointer'
+              }}
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </body>
     </html>
   )
 }
-

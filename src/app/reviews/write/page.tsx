@@ -71,7 +71,7 @@ export default function WriteReviewPage() {
         body: JSON.stringify({
           bookingId: selectedBooking.id,
           travelerId: userData.user.id,
-          businessId: selectedBooking.business.id || selectedBooking.businessId,
+          businessId: (selectedBooking as any).businessId || (selectedBooking.business as any)?.id,
           rating: review.rating,
           comment: review.comment
         }),

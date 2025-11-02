@@ -264,12 +264,11 @@ export function FileUpload({
           </div>
         )}
 
-        {files.length > 0 && uploadStatus !== 'uploading' && (
+        {files.length > 0 && (uploadStatus === 'idle' || uploadStatus === 'error') && (
           <Button
             type="button"
             onClick={handleUpload}
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
-            disabled={uploadStatus === 'uploading'}
           >
             {multiple ? `Upload ${files.length} Files` : 'Upload File'}
           </Button>
