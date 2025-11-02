@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { UserRole } from '@prisma/client'
 
 // POST /api/users/sync - Sync Clerk user data to database
 export async function POST(request: NextRequest) {
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
           email,
           name,
           profilePicture,
-          role: role ? role.toUpperCase() : 'TRAVELER',
+          role: role ? (role.toUpperCase() as UserRole) : 'TRAVELER',
           bio,
           country,
         }

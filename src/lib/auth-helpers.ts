@@ -1,5 +1,6 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
+import { UserRole } from '@prisma/client'
 
 /**
  * Get the current user from Clerk and sync with database
@@ -28,7 +29,7 @@ export async function getCurrentUser() {
             ? `${clerkUser.firstName} ${clerkUser.lastName}`
             : clerkUser.firstName || clerkUser.username || null,
           profilePicture: clerkUser.imageUrl || null,
-          role: (clerkUser.publicMetadata?.role as string)?.toUpperCase() || 'TRAVELER',
+          role: ((clerkUser.publicMetadata?.role as string)?.toUpperCase() as UserRole) || 'TRAVELER',
           bio: clerkUser.publicMetadata?.bio as string || null,
           country: clerkUser.publicMetadata?.country as string || null,
         }
@@ -43,7 +44,7 @@ export async function getCurrentUser() {
             ? `${clerkUser.firstName} ${clerkUser.lastName}`
             : clerkUser.firstName || clerkUser.username || dbUser.name,
           profilePicture: clerkUser.imageUrl || dbUser.profilePicture,
-          role: (clerkUser.publicMetadata?.role as string)?.toUpperCase() || dbUser.role,
+          role: ((clerkUser.publicMetadata?.role as string)?.toUpperCase() as UserRole) || dbUser.role,
         }
       })
     }

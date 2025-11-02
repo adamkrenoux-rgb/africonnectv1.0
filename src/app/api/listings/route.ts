@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { validateRequest, createListingSchema } from '@/lib/validation'
+import { Prisma } from '@prisma/client'
 
 // GET /api/listings - Get all listings with filters
 export async function GET(request: NextRequest) {
@@ -118,7 +119,7 @@ export async function POST(request: NextRequest) {
         activityType: data.activityType,
         tags: data.tags || [],
         maxCapacity: data.maxCapacity || 1,
-        availability: data.availability || null,
+        ...(data.availability && { availability: data.availability as Prisma.InputJsonValue }),
         verified: business.verificationBadge // Auto-verify if business is verified
       },
       include: {

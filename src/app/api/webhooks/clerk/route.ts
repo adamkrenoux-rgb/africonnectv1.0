@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { prisma } from '@/lib/prisma'
+import { UserRole } from '@prisma/client'
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET
 
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
         ? `${first_name || ''} ${last_name || ''}`.trim() 
         : email?.split('@')[0] || null
       const profilePicture = image_url || null
-      const role = (public_metadata?.role as string)?.toUpperCase() || 'TRAVELER'
+      const role = ((public_metadata?.role as string)?.toUpperCase() as UserRole) || 'TRAVELER'
 
       if (!email) {
         console.error('No email found in Clerk user data')
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
               email,
               name: name || existingUser.name,
               profilePicture: profilePicture || existingUser.profilePicture,
-              role: role || existingUser.role,
+              role: (role as UserRole) || existingUser.role,
               ...(public_metadata?.bio && { bio: public_metadata.bio as string }),
               ...(public_metadata?.country && { country: public_metadata.country as string })
             }
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
                   clerkId,
                   name: name || userByEmail.name,
                   profilePicture: profilePicture || userByEmail.profilePicture,
-                  role: role || userByEmail.role
+                  role: (role as UserRole) || userByEmail.role
                 }
               })
 

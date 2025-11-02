@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { validateRequest, createBusinessSchema } from '@/lib/validation'
+import { Prisma } from '@prisma/client'
 
 // GET /api/businesses - Get all businesses with filters
 export async function GET(request: NextRequest) {
@@ -118,7 +119,7 @@ export async function POST(request: NextRequest) {
         location: data.location.trim(),
         city: data.city.trim(),
         country: data.country.trim(),
-        coordinates: data.coordinates || null,
+        ...(data.coordinates && Array.isArray(data.coordinates) && { coordinates: data.coordinates as Prisma.InputJsonValue }),
         businessType: data.businessType,
         website: data.website || null,
         phone: data.phone || null,

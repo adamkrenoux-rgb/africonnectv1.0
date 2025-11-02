@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
+import { UserRole } from '@prisma/client'
 
 // GET /api/users/me - Get current user's database record
 export async function GET(request: NextRequest) {
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     // If user doesn't exist, create them
     if (!dbUser) {
-      dbUser = await prisma.user.create({
+      const newUser = await prisma.user.create({
         data: {
           clerkId: clerkUser.id,
           email: clerkUser.emailAddresses[0]?.emailAddress || '',
@@ -38,10 +39,15 @@ export async function GET(request: NextRequest) {
             ? `${clerkUser.firstName} ${clerkUser.lastName}`
             : clerkUser.firstName || clerkUser.username || null,
           profilePicture: clerkUser.imageUrl || null,
-          role: (clerkUser.publicMetadata?.role as string)?.toUpperCase() || 'TRAVELER',
+          role: ((clerkUser.publicMetadata?.role as string)?.toUpperCase() as UserRole) || 'TRAVELER',
           bio: clerkUser.publicMetadata?.bio as string || null,
           country: clerkUser.publicMetadata?.country as string || null,
-        },
+        }
+      })
+      
+      // Fetch with relations
+      dbUser = await prisma.user.findUnique({
+        where: { id: newUser.id },
         include: {
           businesses: {
             select: {
