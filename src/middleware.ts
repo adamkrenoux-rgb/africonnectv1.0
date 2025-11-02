@@ -16,21 +16,48 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  // Allow public routes
-  if (isPublicRoute(req)) {
-    return NextResponse.next();
-  }
+  try {
+    // Allow public routes
+    if (isPublicRoute(req)) {
+      return NextResponse.next();
+    }
 
-  // Protect all other routes
-  const { userId } = await auth();
-  
-  if (!userId) {
+    // Check if Clerk is configured
+    if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || !process.env.CLERK_SECRET_KEY) {
+      // If Clerk is not configured, allow all routes (for development/testing)
+      console.warn('Clerk not configured - allowing all routes');
+      return NextResponse.next();
+    }
+
+    // Protect all other routes
+    const { userId } = await auth();
+    
+    if (!userId) {
+      const signInUrl = new URL('/sign-in', req.url);
+      signInUrl.searchParams.set('redirect_url', req.url);
+      return NextResponse.redirect(signInUrl);
+    }
+
+    return NextResponse.next();
+  } catch (error: any) {
+    // Log error but don't crash - allow request to proceed if Clerk fails
+    console.error('Middleware error:', error);
+    
+    // If it's a public route, allow it anyway
+    if (isPublicRoute(req)) {
+      return NextResponse.next();
+    }
+    
+    // For protected routes, allow access if Clerk is not configured
+    // (This prevents the app from being completely broken if Clerk setup is incomplete)
+    if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+      return NextResponse.next();
+    }
+    
+    // Otherwise, redirect to sign-in as a fallback
     const signInUrl = new URL('/sign-in', req.url);
-    signInUrl.searchParams.set('redirect_url', req.url);
     return NextResponse.redirect(signInUrl);
   }
-
-  return NextResponse.next();
 });
 
 export const config = {
