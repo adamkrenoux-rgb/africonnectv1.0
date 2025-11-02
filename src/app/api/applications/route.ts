@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { validateRequest, createApplicationSchema } from '@/lib/validation'
+import { sendEmail, emailTemplates } from '@/lib/email'
 
 // GET /api/applications - Get all applications with filters
 export async function GET(request: NextRequest) {
@@ -136,6 +137,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Get influencer email for notification
+    const influencer = await prisma.user.findUnique({
+      where: { id: campaign.influencerId },
+      select: { email: true, name: true }
+    })
+
     // Create application
     const application = await prisma.application.create({
       data: {
@@ -167,6 +174,24 @@ export async function POST(request: NextRequest) {
         }
       }
     })
+
+    // Send email notification to influencer
+    if (influencer?.email) {
+      const emailResult = await sendEmail({
+        to: influencer.email,
+        ...emailTemplates.campaignApplication({
+          businessName: application.business.businessName,
+          campaignTitle: application.campaign.title,
+          influencerName: influencer.name || 'Influencer',
+          proposalText: proposalText || 'No proposal provided'
+        })
+      })
+      
+      if (!emailResult.success) {
+        console.error('Failed to send application notification email:', emailResult.error)
+        // Don't fail application creation if email fails
+      }
+    }
 
     return NextResponse.json({ success: true, application }, { status: 201 })
   } catch (error: any) {

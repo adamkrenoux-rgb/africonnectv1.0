@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { validateRequest, createBookingSchema } from '@/lib/validation'
+import { sendEmail, emailTemplates } from '@/lib/email'
 
 // GET /api/bookings - Get all bookings with filters
 export async function GET(request: NextRequest) {
@@ -137,6 +138,26 @@ export async function POST(request: NextRequest) {
         }
       }
     })
+
+    // Send booking confirmation email to traveler
+    if (booking.traveler.email) {
+      const emailResult = await sendEmail({
+        to: booking.traveler.email,
+        ...emailTemplates.bookingConfirmation({
+          id: booking.id,
+          listingTitle: booking.listing.title,
+          businessName: booking.listing.business.businessName,
+          bookingDate: booking.bookingDate.toISOString(),
+          totalAmount: booking.totalAmount,
+          travelerName: booking.traveler.name || 'Traveler'
+        })
+      })
+      
+      if (!emailResult.success) {
+        console.error('Failed to send booking confirmation email:', emailResult.error)
+        // Don't fail the booking creation if email fails
+      }
+    }
 
     return NextResponse.json({ success: true, booking }, { status: 201 })
   } catch (error: any) {
