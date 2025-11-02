@@ -1,26 +1,31 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default authMiddleware({
-  // Routes that are public (no authentication required)
-  publicRoutes: [
-    '/',
-    '/travelers',
-    '/businesses',
-    '/influencers',
-    '/plan-trip',
-    '/experiences(.*)',
-    '/api/webhooks(.*)',
-    '/api/ai(.*)',
-    '/sign-in(.*)',
-    '/sign-up(.*)',
-    '/api/auth/signup', // Keep direct signup for admin/testing
-  ],
-  // Routes that require authentication
-  ignoredRoutes: [
-    '/api/webhooks/clerk', // Allow webhook without auth
-  ],
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/travelers',
+  '/businesses',
+  '/influencers',
+  '/plan-trip',
+  '/experiences(.*)',
+  '/api/webhooks(.*)',
+  '/api/ai(.*)',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/api/auth/signup', // Keep direct signup for admin/testing
+]);
+
+export default clerkMiddleware(async (auth, req) => {
+  // Protect all routes except public ones
+  if (!isPublicRoute(req)) {
+    await auth.protect();
+  }
 });
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 };

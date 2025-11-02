@@ -2,8 +2,9 @@
 
 ## ✅ What's Been Implemented
 
-### 1. **Middleware Protection**
-- Routes protected by default
+### 1. **Middleware Protection** ✅
+- Uses `clerkMiddleware()` from `@clerk/nextjs/server` (current, correct implementation)
+- Routes protected by default with `createRouteMatcher` for public routes
 - Public routes configured (home, sign-in, sign-up, API webhooks)
 - All dashboard routes require authentication
 
@@ -76,25 +77,9 @@ When a user signs up, set their role in Clerk's public metadata:
 
 Or handle in onboarding flow by updating Clerk user metadata.
 
-### Step 5: Update Root Layout (Optional)
+### Step 5: Root Layout Setup ✅
 
-If you want to auto-sync users on every page load:
-
-```tsx
-// src/app/layout.tsx
-import { ClerkProvider } from '@clerk/nextjs'
-import { UserProvider } from '@/components/UserProvider'
-
-export default function RootLayout({ children }) {
-  return (
-    <ClerkProvider>
-      <UserProvider>
-        {children}
-      </UserProvider>
-    </ClerkProvider>
-  )
-}
-```
+The root layout already includes `<ClerkProvider>` wrapping the entire app. This is required for Clerk to work properly.
 
 ## 📝 Usage Examples
 
