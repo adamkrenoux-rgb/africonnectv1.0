@@ -38,7 +38,7 @@ export default function Home() {
         {/* Beautiful Sunset Background */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/20 via-orange-500/30 to-red-500/20"></div>
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/sammy-wong-6qekp4-XZHI-unsplash.jpg')] bg-cover bg-center opacity-50"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center')] bg-cover bg-center opacity-50"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
