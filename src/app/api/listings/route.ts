@@ -12,6 +12,13 @@ export async function GET(request: NextRequest) {
     const businessId = searchParams.get('businessId')
     const limit = searchParams.get('limit')
     const search = searchParams.get('search')
+    const page = searchParams.get('page')
+    const pageSize = searchParams.get('pageSize')
+    
+    // Pagination setup
+    const itemsPerPage = pageSize ? Math.min(parseInt(pageSize), 50) : 20 // Default 20, max 50
+    const currentPage = page ? Math.max(1, parseInt(page)) : 1
+    const skip = (currentPage - 1) * itemsPerPage
 
     const where: any = {}
     if (verified) where.verified = verified === 'true'
@@ -24,6 +31,9 @@ export async function GET(request: NextRequest) {
         { description: { contains: sanitizedSearch, mode: 'insensitive' } }
       ]
     }
+
+    // Get total count for pagination
+    const totalCount = await prisma.listing.count({ where })
 
     const listings = await prisma.listing.findMany({
       where,
@@ -54,7 +64,8 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: 'desc'
       },
-      ...(limit && { take: Math.min(parseInt(limit) || 100, 100) }) // Max 100 items
+      skip,
+      take: limit ? Math.min(parseInt(limit) || itemsPerPage, 100) : itemsPerPage // Use pagination or limit
     })
 
     // Calculate stats for each listing
@@ -70,7 +81,20 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({ success: true, listings: listingsWithStats }, { status: 200 })
+    const totalPages = Math.ceil(totalCount / itemsPerPage)
+
+    return NextResponse.json({ 
+      success: true, 
+      listings: listingsWithStats,
+      pagination: {
+        currentPage,
+        totalPages,
+        totalItems: totalCount,
+        itemsPerPage,
+        hasNextPage: currentPage < totalPages,
+        hasPreviousPage: currentPage > 1
+      }
+    }, { status: 200 })
   } catch (error) {
     console.error('Error fetching listings:', error)
     return NextResponse.json(

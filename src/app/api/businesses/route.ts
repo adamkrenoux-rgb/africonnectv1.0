@@ -12,6 +12,13 @@ export async function GET(request: NextRequest) {
     const businessType = searchParams.get('type')
     const limit = searchParams.get('limit')
     const search = searchParams.get('search')
+    const page = searchParams.get('page')
+    const pageSize = searchParams.get('pageSize')
+    
+    // Pagination setup
+    const itemsPerPage = pageSize ? Math.min(parseInt(pageSize), 50) : 20
+    const currentPage = page ? Math.max(1, parseInt(page)) : 1
+    const skip = (currentPage - 1) * itemsPerPage
 
     // Validate and sanitize inputs
     const where: any = {}
@@ -35,6 +42,9 @@ export async function GET(request: NextRequest) {
         { country: { contains: sanitizedSearch, mode: 'insensitive' } }
       ]
     }
+
+    // Get total count for pagination
+    const totalCount = await prisma.business.count({ where })
 
     const businesses = await prisma.business.findMany({
       where,
@@ -64,7 +74,8 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: 'desc'
       },
-      ...(limit && { take: Math.min(parseInt(limit) || 100, 100) }) // Max 100 items
+      skip,
+      take: limit ? Math.min(parseInt(limit) || itemsPerPage, 100) : itemsPerPage
     })
 
     // Calculate average ratings
@@ -80,7 +91,20 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({ success: true, businesses: businessesWithRatings }, { status: 200 })
+    const totalPages = Math.ceil(totalCount / itemsPerPage)
+
+    return NextResponse.json({ 
+      success: true, 
+      businesses: businessesWithRatings,
+      pagination: {
+        currentPage,
+        totalPages,
+        totalItems: totalCount,
+        itemsPerPage,
+        hasNextPage: currentPage < totalPages,
+        hasPreviousPage: currentPage > 1
+      }
+    }, { status: 200 })
   } catch (error) {
     console.error('Error fetching businesses:', error)
     return NextResponse.json(
