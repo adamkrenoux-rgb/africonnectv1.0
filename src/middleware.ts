@@ -11,13 +11,12 @@ const isPublicRoute = createRouteMatcher([
   '/api/ai(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
-  '/api/auth/signup', // Keep direct signup for admin/testing
+  '/api/auth/signup',
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
-  // Protect all routes except public ones
+export default clerkMiddleware((auth, req) => {
   if (!isPublicRoute(req)) {
-    await auth.protect();
+    auth().protect();
   }
 });
 
