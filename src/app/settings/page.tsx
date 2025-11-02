@@ -1,22 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import { useCurrentUser, UserButton } from '@/components/UserProvider'
+import { useAuth } from '@clerk/nextjs'
 
 export default function SettingsPage() {
+  const router = useRouter()
+  const { isSignedIn, isLoaded: authLoaded } = useAuth()
+  const { dbUser, isLoaded: userLoaded, role } = useCurrentUser()
   const [activeTab, setActiveTab] = useState('profile')
   const [isSaving, setIsSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Mock user data - in real app, this would come from API/Clerk
   const [profileData, setProfileData] = useState({
-    name: 'John Doe',
-    email: 'john@example.com',
-    bio: 'Travel enthusiast exploring Africa',
-    country: 'Kenya',
+    name: '',
+    email: '',
+    bio: '',
+    country: '',
     profilePicture: ''
   })
 
@@ -34,19 +40,84 @@ export default function SettingsPage() {
     showBookings: true
   })
 
+  // Load user data when component mounts
+  useEffect(() => {
+    if (authLoaded && !isSignedIn) {
+      router.push('/sign-in')
+      return
+    }
+
+    if (userLoaded && dbUser) {
+      setProfileData({
+        name: dbUser.name || '',
+        email: dbUser.email || '',
+        bio: dbUser.bio || '',
+        country: dbUser.country || '',
+        profilePicture: dbUser.profilePicture || ''
+      })
+      setIsLoading(false)
+    } else if (userLoaded && !dbUser) {
+      setIsLoading(false)
+    }
+  }, [authLoaded, isSignedIn, userLoaded, dbUser, router])
+
   const handleSave = async () => {
+    if (!dbUser) return
+
     setIsSaving(true)
     setSaved(false)
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // In real app, call API to save settings
-    // await fetch('/api/users/[id]', { method: 'PATCH', body: JSON.stringify(data) })
-    
-    setIsSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+    try {
+      const response = await fetch(`/api/users/${dbUser.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: profileData.name,
+          bio: profileData.bio,
+          country: profileData.country,
+          profilePicture: profileData.profilePicture,
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save settings')
+      }
+
+      const data = await response.json()
+      
+      // Reload user data
+      if (data.user) {
+        setProfileData(prev => ({
+          ...prev,
+          name: data.user.name || prev.name,
+          bio: data.user.bio || prev.bio,
+          country: data.user.country || prev.country,
+          profilePicture: data.user.profilePicture || prev.profilePicture,
+        }))
+      }
+
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (error) {
+      console.error('Error saving settings:', error)
+      alert('Failed to save settings. Please try again.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  if (!authLoaded || !userLoaded || isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+        <LoadingSpinner size="lg" text="Loading settings..." />
+      </div>
+    )
+  }
+
+  if (!isSignedIn) {
+    return null // Will redirect
   }
 
   const tabs = [
@@ -74,9 +145,11 @@ export default function SettingsPage() {
               <Link href="/businesses" className="text-gray-600 hover:text-yellow-600 transition-colors">For Businesses</Link>
               <Link href="/influencers" className="text-gray-600 hover:text-yellow-600 transition-colors">For Influencers</Link>
             </nav>
-            <div className="flex space-x-4">
-              <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Dashboard</Button>
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Sign Out</Button>
+            <div className="flex space-x-4 items-center">
+              <Link href="/dashboard">
+                <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Dashboard</Button>
+              </Link>
+              <UserButton afterSignOutUrl="/" />
             </div>
           </div>
         </div>

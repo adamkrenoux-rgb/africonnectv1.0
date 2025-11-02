@@ -1,16 +1,26 @@
-// Simple middleware for development
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { authMiddleware } from "@clerk/nextjs";
 
-export function middleware(request: NextRequest) {
-  // Allow all routes for development
-  return NextResponse.next()
-}
+export default authMiddleware({
+  // Routes that are public (no authentication required)
+  publicRoutes: [
+    '/',
+    '/travelers',
+    '/businesses',
+    '/influencers',
+    '/plan-trip',
+    '/experiences(.*)',
+    '/api/webhooks(.*)',
+    '/api/ai(.*)',
+    '/sign-in(.*)',
+    '/sign-up(.*)',
+    '/api/auth/signup', // Keep direct signup for admin/testing
+  ],
+  // Routes that require authentication
+  ignoredRoutes: [
+    '/api/webhooks/clerk', // Allow webhook without auth
+  ],
+});
 
 export const config = {
-  // Protects all routes including api/trpc routes
-  // Please edit this to allow other routes to be public as needed.
-  // See https://clerk.com/docs/references/nextjs/auth-middleware
-  // for more information about configuring your Middleware
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
-}
+};
