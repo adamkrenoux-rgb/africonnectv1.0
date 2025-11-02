@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const country = searchParams.get('country')
     const businessType = searchParams.get('type')
     const limit = searchParams.get('limit')
+    const search = searchParams.get('search')
 
     // Validate and sanitize inputs
     const where: any = {}
@@ -23,6 +24,16 @@ export async function GET(request: NextRequest) {
     }
     if (businessType) {
       where.businessType = businessType.trim().toUpperCase()
+    }
+    if (search) {
+      const sanitizedSearch = search.trim().slice(0, 100)
+      where.OR = [
+        { businessName: { contains: sanitizedSearch, mode: 'insensitive' } },
+        { description: { contains: sanitizedSearch, mode: 'insensitive' } },
+        { location: { contains: sanitizedSearch, mode: 'insensitive' } },
+        { city: { contains: sanitizedSearch, mode: 'insensitive' } },
+        { country: { contains: sanitizedSearch, mode: 'insensitive' } }
+      ]
     }
 
     const businesses = await prisma.business.findMany({

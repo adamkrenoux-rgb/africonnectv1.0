@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { useCurrentUser, UserButton } from '@/components/UserProvider'
 import { useAuth } from '@clerk/nextjs'
+import { FileUpload, UploadResult } from '@/components/FileUpload'
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -199,17 +200,35 @@ export default function SettingsPage() {
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         Profile Picture
                       </label>
-                      <div className="flex items-center gap-4">
-                        <div className="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center">
+                      <div className="flex items-start gap-6">
+                        <div className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                           {profileData.profilePicture ? (
                             <img src={profileData.profilePicture} alt="Profile" className="w-full h-full rounded-full object-cover" />
                           ) : (
                             <span className="text-3xl">👤</span>
                           )}
                         </div>
-                        <Button variant="outline" className="border-gray-600 text-gray-300">
-                          Change Photo
-                        </Button>
+                        <div className="flex-1">
+                          <FileUpload
+                            bucket="user-avatars"
+                            userId={dbUser?.id}
+                            accept="image/*"
+                            maxSize={5}
+                            label=""
+                            description="Upload a profile picture (max 5MB, JPEG/PNG/WebP)"
+                            onUploadComplete={(result: UploadResult) => {
+                              setProfileData({ ...profileData, profilePicture: result.url })
+                              // Auto-save after upload
+                              setTimeout(() => {
+                                handleSave()
+                              }, 500)
+                            }}
+                            onUploadError={(error) => {
+                              console.error('Upload error:', error)
+                            }}
+                            className="max-w-md"
+                          />
+                        </div>
                       </div>
                     </div>
 
