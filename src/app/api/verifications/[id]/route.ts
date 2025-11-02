@@ -56,10 +56,22 @@ export async function PATCH(
       )
     }
 
-    // Get verification and business
+    // Get verification and business with user
     const verification = await prisma.verification.findUnique({
       where: { id: params.id },
-      include: { business: true }
+      include: {
+        business: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          }
+        }
+      }
     })
 
     if (!verification) {
