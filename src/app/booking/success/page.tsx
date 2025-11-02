@@ -1,8 +1,42 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { CheckCircle2, Calendar, Users, MapPin } from 'lucide-react'
 
 export default function BookingSuccessPage() {
+  const searchParams = useSearchParams()
+  const bookingId = searchParams.get('bookingId')
+  const paymentIntent = searchParams.get('paymentIntent')
+  
+  const [booking, setBooking] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    if (bookingId) {
+      fetchBooking()
+    } else {
+      setIsLoading(false)
+    }
+  }, [bookingId])
+
+  const fetchBooking = async () => {
+    try {
+      const response = await fetch(`/api/bookings/${bookingId}`)
+      const data = await response.json()
+
+      if (data.success) {
+        setBooking(data.booking)
+      }
+    } catch (error) {
+      console.error('Failed to fetch booking:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
       {/* Header */}
@@ -37,26 +71,87 @@ export default function BookingSuccessPage() {
             Your African adventure has been successfully booked. You will receive a confirmation email with all the details shortly.
           </p>
           
-          <Card className="bg-gray-800 border-yellow-500/30 p-8 max-w-2xl mx-auto mb-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Booking Details</h2>
-            
-            <div className="grid md:grid-cols-2 gap-6 text-left">
-              <div>
-                <h3 className="text-yellow-400 font-semibold mb-2">Trip Information</h3>
-                <p className="text-gray-300 mb-1">Destination: Kenya</p>
-                <p className="text-gray-300 mb-1">Duration: 7 days</p>
-                <p className="text-gray-300 mb-1">Travel Dates: March 2024</p>
-                <p className="text-gray-300 mb-1">Group Size: 2 people</p>
-              </div>
+          {isLoading ? (
+            <div className="text-gray-300">Loading booking details...</div>
+          ) : booking ? (
+            <Card className="bg-gray-800 border-yellow-500/30 p-8 max-w-2xl mx-auto mb-8">
+              <h2 className="text-2xl font-bold text-white mb-6">Booking Details</h2>
               
-              <div>
-                <h3 className="text-yellow-400 font-semibold mb-2">Payment Details</h3>
-                <p className="text-gray-300 mb-1">Total Amount: $2,500</p>
-                <p className="text-gray-300 mb-1">Payment Method: Credit Card</p>
-                <p className="text-gray-300 mb-1">Booking ID: #AFR-2024-001</p>
-                <p className="text-gray-300 mb-1">Status: Confirmed</p>
+              <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div>
+                  <h3 className="text-yellow-400 font-semibold mb-2 flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    Trip Information
+                  </h3>
+                  <p className="text-gray-300 mb-2">
+                    <span className="font-semibold">{booking.listing?.title || 'Experience'}</span>
+                  </p>
+                  <p className="text-gray-300 mb-1 flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    {booking.business?.city && booking.business?.country 
+                      ? `${booking.business.city}, ${booking.business.country}`
+                      : booking.listing?.business?.city && booking.listing?.business?.country
+                      ? `${booking.listing.business.city}, ${booking.listing.business.country}`
+                      : 'Location TBD'}
+                  </p>
+                  <p className="text-gray-300 mb-1">
+                    Date: {new Date(booking.bookingDate).toLocaleDateString()}
+                  </p>
+                  <p className="text-gray-300 mb-1">
+                    Duration: {booking.listing?.duration || 'TBD'}
+                  </p>
+                  <p className="text-gray-300 mb-1">
+                    Business: {booking.business?.businessName || booking.listing?.business?.businessName || 'N/A'}
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-yellow-400 font-semibold mb-2">Payment Details</h3>
+                  <p className="text-gray-300 mb-1">
+                    Total Amount: <span className="text-yellow-400 font-bold">${booking.totalAmount?.toFixed(2)}</span>
+                  </p>
+                  <p className="text-gray-300 mb-1">
+                    Payment Method: {paymentIntent ? 'Credit Card (Stripe)' : 'Credit Card'}
+                  </p>
+                  <p className="text-gray-300 mb-1">
+                    Booking ID: {booking.id}
+                  </p>
+                  <p className="text-gray-300 mb-1">
+                    Status: <span className={`font-semibold ${
+                      booking.status === 'CONFIRMED' || booking.status === 'PENDING' 
+                        ? 'text-yellow-400' 
+                        : booking.status === 'COMPLETED' 
+                        ? 'text-green-400' 
+                        : 'text-gray-400'
+                    }`}>
+                      {booking.status}
+                    </span>
+                  </p>
+                  <p className="text-gray-300 mb-1">
+                    Payment Status: <span className={`font-semibold ${
+                      booking.paymentStatus === 'HELD_IN_ESCROW' 
+                        ? 'text-yellow-400' 
+                        : booking.paymentStatus === 'COMPLETED' 
+                        ? 'text-green-400' 
+                        : 'text-gray-400'
+                    }`}>
+                      {booking.paymentStatus || 'PENDING'}
+                    </span>
+                  </p>
+                </div>
               </div>
-            </div>
+            </Card>
+          ) : (
+            <Card className="bg-gray-800 border-yellow-500/30 p-8 max-w-2xl mx-auto mb-8">
+              <h2 className="text-2xl font-bold text-white mb-6">Booking Confirmed!</h2>
+              <p className="text-gray-300">
+                Your booking has been successfully processed. Check your email for confirmation details.
+              </p>
+              {bookingId && (
+                <p className="text-gray-400 text-sm mt-2">Booking ID: {bookingId}</p>
+              )}
+            </Card>
+          )}
             
             <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
               <h3 className="text-yellow-400 font-semibold mb-2">What's Next?</h3>
