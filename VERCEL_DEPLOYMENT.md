@@ -1,149 +1,125 @@
 # Vercel Deployment Guide
 
-## Issues Fixed
+## Required Environment Variables
 
-✅ **Image Configuration Updated:**
-- Changed from deprecated `domains` to `remotePatterns` in `next.config.js`
-- Fixed broken hero image path (was referencing non-existent local file)
-- All images now use working Unsplash URLs
+Make sure all these environment variables are set in your Vercel dashboard:
 
-✅ **Error Components Added:**
-- Created `error.tsx` and `global-error.tsx` (required by Next.js)
-
-## Vercel Deployment Steps
-
-### 1. Connect Repository to Vercel
-
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
-2. Click **Add New Project**
-3. Import your GitHub repository: `adamkrenoux-rgb/africonnectv1.0`
-4. Vercel will auto-detect Next.js
-
-### 2. Configure Environment Variables in Vercel
-
-**Critical:** Add these in Vercel Dashboard → Your Project → Settings → Environment Variables:
-
+### Essential (Required)
 ```env
 # Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dW5pdGVkLWdob3N0LTkxLmNsZXJrLmFjY291bnRzLmRldiQ
-CLERK_SECRET_KEY=sk_test_bQnmSm1LJSTHy25dHAqT1l8zuETub3fu75QQuFIla5
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
+CLERK_SECRET_KEY=sk_live_...
 
-# Database (if you have it)
-DATABASE_URL=postgresql://...
+# Database
+DATABASE_URL=postgresql://user:password@host:port/database
+```
 
-# OpenAI (if you have it)
+### Optional (Recommended)
+```env
+# Stripe Payments (for booking functionality)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_SECRET_KEY=sk_live_...
+
+# OpenAI (for AI features)
 OPENAI_API_KEY=sk-...
 
-# Clerk Webhook (set up after basic deployment works)
-CLERK_WEBHOOK_SECRET=whsec_...
+# Storage (for file uploads)
+NEXT_PUBLIC_SUPABASE_URL=https://...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+
+# Email (for notifications)
+RESEND_API_KEY=re_...
+
+# Error Monitoring (optional)
+NEXT_PUBLIC_SENTRY_DSN=https://...
+
+# Analytics (optional)
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...
 ```
 
-**Important:** 
-- Add to **Production**, **Preview**, and **Development** environments
-- After adding variables, **redeploy** your project
+## Common Deployment Issues
 
-### 3. Configure Build Settings
+### 1. Middleware Error (MIDDLEWARE_INVOCATION_FAILED)
 
-Vercel should auto-detect:
-- **Framework Preset:** Next.js
-- **Build Command:** `npm run build` (default)
-- **Output Directory:** `.next` (default)
-- **Install Command:** `npm install` (default)
+**Cause:** Missing Clerk environment variables or Clerk middleware error
 
-### 4. Deploy
+**Solution:**
+1. Ensure `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` are set in Vercel
+2. Verify Clerk keys are from the same Clerk environment (dev vs production)
+3. The middleware now handles missing Clerk gracefully - the app will work but auth won't be enforced
 
-1. Vercel will auto-deploy when you push to `main` branch
-2. **OR** manually trigger: Vercel Dashboard → Deployments → Redeploy
+### 2. Build Errors
 
-### 5. Update Vercel After Local Changes
+**Common causes:**
+- Missing environment variables causing module initialization errors
+- TypeScript errors in build
 
-After pushing code:
-```bash
-git add .
-git commit -m "Your message"
-git push origin main
-```
+**Solution:**
+- Check build logs in Vercel dashboard
+- Ensure all required env vars are set
+- Run `npm run build` locally to catch errors early
 
-Vercel will automatically:
-- Detect the push
-- Start a new deployment
-- Build your Next.js app
-- Deploy to production
+### 3. Database Connection Errors
 
-### 6. Check Deployment Status
+**Cause:** DATABASE_URL not set or incorrect
 
-- Go to Vercel Dashboard → Your Project → Deployments
-- Look for latest deployment
-- Green checkmark = successful
-- Click to see build logs if failed
+**Solution:**
+- Get DATABASE_URL from Supabase project settings
+- Ensure database allows connections from Vercel's IPs
+- Check database connection string format
+
+## Step-by-Step Deployment
+
+1. **Push to GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. **Connect to Vercel**
+   - Go to vercel.com
+   - Import your GitHub repository
+   - Vercel will auto-detect Next.js
+
+3. **Set Environment Variables**
+   - Go to Project Settings → Environment Variables
+   - Add all variables from the list above
+   - Make sure to add them for Production, Preview, and Development
+
+4. **Deploy**
+   - Vercel will auto-deploy on push to main
+   - Or trigger manually from Vercel dashboard
+
+5. **Check Deployment Logs**
+   - Watch the build logs
+   - Fix any errors that appear
+   - Redeploy if needed
+
+## Post-Deployment Checklist
+
+- [ ] Homepage loads successfully
+- [ ] Sign-in/Sign-up pages work
+- [ ] API routes respond (check `/api/users/me`)
+- [ ] Database connections work
+- [ ] File uploads work (if Supabase configured)
+- [ ] No console errors in browser
+- [ ] Environment variables are set correctly
 
 ## Troubleshooting
 
-### Images Not Showing on Vercel
+### Check Environment Variables
+In Vercel dashboard: Settings → Environment Variables
 
-**Fixed:** Updated `next.config.js` to use `remotePatterns` instead of deprecated `domains`
+### Check Build Logs
+In Vercel dashboard: Deployments → Click on deployment → View Build Logs
 
-### Changes Not Showing
+### Check Runtime Logs
+In Vercel dashboard: Deployments → Click on deployment → View Function Logs
 
-1. **Check if code was pushed:**
-   ```bash
-   git log --oneline -5
-   git status
-   ```
-
-2. **Check Vercel deployment:**
-   - Go to Vercel Dashboard → Deployments
-   - Look for latest deployment with your commit
-   - Check build logs for errors
-
-3. **Force redeploy:**
-   - Vercel Dashboard → Deployments → Three dots → Redeploy
-
-4. **Clear cache:**
-   - Vercel Dashboard → Settings → General → Clear Build Cache
-   - Then redeploy
-
-### Build Failures
-
-Common issues:
-- Missing environment variables → Add them in Vercel
-- TypeScript errors → Fix locally, push again
-- Missing dependencies → Check `package.json`
-
-### Environment Variables Not Working
-
-- Make sure they're added in Vercel Dashboard (not just `.env.local`)
-- Redeploy after adding variables
-- Check variable names match exactly (case-sensitive)
-
-## Quick Checklist
-
-- [ ] Repository connected to Vercel
-- [ ] All environment variables added in Vercel Dashboard
-- [ ] Build settings configured correctly
-- [ ] Code pushed to `main` branch
-- [ ] Latest deployment successful (green checkmark)
-- [ ] Site is live and accessible
-
-## Next Steps After Deployment
-
-1. **Set up Clerk Webhook:**
-   - Get your Vercel deployment URL
-   - In Clerk Dashboard → Webhooks
-   - Add endpoint: `https://your-app.vercel.app/api/webhooks/clerk`
-   - Subscribe to: `user.created`, `user.updated`, `user.deleted`
-   - Copy webhook secret to Vercel environment variables
-
-2. **Test Authentication:**
-   - Go to your live site
-   - Try signing up
-   - Verify user is created in database
-
-3. **Monitor Deployments:**
-   - Check Vercel Dashboard regularly
-   - Review build logs if deployments fail
-
+### Test Locally
+```bash
+# Copy production env vars to .env.local
+# Run build locally
+npm run build
+npm start
+```
