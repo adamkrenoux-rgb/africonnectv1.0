@@ -55,6 +55,14 @@ export default function WriteReviewPage() {
 
     setIsLoading(true)
     try {
+      // Get current user ID
+      const userResponse = await fetch('/api/users/me')
+      const userData = await userResponse.json()
+      
+      if (!userData.success || !userData.user) {
+        throw new Error('User not found. Please sign in.')
+      }
+
       const response = await fetch('/api/reviews', {
         method: 'POST',
         headers: {
@@ -62,18 +70,23 @@ export default function WriteReviewPage() {
         },
         body: JSON.stringify({
           bookingId: selectedBooking.id,
+          travelerId: userData.user.id,
+          businessId: selectedBooking.business.id || selectedBooking.businessId,
           rating: review.rating,
           comment: review.comment
         }),
       })
 
-      if (response.ok) {
-        router.push('/dashboard')
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        router.push('/travelers/dashboard')
       } else {
-        console.error('Failed to submit review')
+        throw new Error(data.error || 'Failed to submit review')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting review:', error)
+      alert(error.message || 'Failed to submit review. Please try again.')
     } finally {
       setIsLoading(false)
     }
