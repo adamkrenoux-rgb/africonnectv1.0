@@ -357,7 +357,7 @@ export default function AdminDashboard() {
                               onClick={() => {
                                 const notes = prompt('Rejection reason (optional):')
                                 if (notes !== null) {
-                                  handleVerificationAction(verification.id, 'REJECTED', notes || '')
+                                  handleVerificationAction(verification.id, 'REJECTED', notes)
                                 }
                               }}
                               variant="outline"

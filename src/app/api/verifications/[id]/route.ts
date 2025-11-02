@@ -73,8 +73,7 @@ export async function PATCH(
     const updatedVerification = await prisma.verification.update({
       where: { id: params.id },
       data: {
-        status: status || verification.status,
-        adminNotes: adminNotes !== undefined ? adminNotes : verification.adminNotes,
+        verificationStatus: status || verification.verificationStatus,
         ...(status === 'APPROVED' && { verifiedAt: new Date() })
       },
       include: {
@@ -108,7 +107,7 @@ export async function PATCH(
             ...emailTemplates.verificationStatus({
               businessName: verification.business.businessName,
               status: 'APPROVED',
-              adminNotes
+              adminNotes: adminNotes || undefined
             })
           })
         } catch (emailError) {
@@ -126,7 +125,7 @@ export async function PATCH(
             ...emailTemplates.verificationStatus({
               businessName: verification.business.businessName,
               status: 'REJECTED',
-              adminNotes
+              adminNotes: adminNotes || undefined
             })
           })
         } catch (emailError) {

@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     const where: any = {}
     if (status) {
-      where.status = status
+      where.verificationStatus = status
     }
     if (businessId) {
       where.businessId = businessId

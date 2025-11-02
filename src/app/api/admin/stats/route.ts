@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
         where: { status: 'OPEN' }
       }),
       prisma.verification.count({
-        where: { status: 'PENDING' }
+        where: { verificationStatus: 'PENDING' }
       }),
       prisma.booking.findMany({
         take: 10,
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
         }
       }),
       prisma.verification.findMany({
-        where: { status: 'PENDING' },
+        where: { verificationStatus: 'PENDING' },
         take: 10,
         orderBy: { createdAt: 'desc' },
         include: {
@@ -149,7 +149,7 @@ export async function GET(request: NextRequest) {
         country: verification.business.country,
         ownerName: verification.business.user?.name || 'Unknown',
         ownerEmail: verification.business.user?.email || '',
-        status: verification.status,
+        status: verification.verificationStatus,
         submittedAt: verification.createdAt
       }))
     }

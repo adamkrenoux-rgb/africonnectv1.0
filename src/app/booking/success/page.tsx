@@ -37,6 +37,15 @@ export default function BookingSuccessPage() {
       setIsLoading(false)
     }
   }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
       {/* Header */}
@@ -71,13 +80,11 @@ export default function BookingSuccessPage() {
             Your African adventure has been successfully booked. You will receive a confirmation email with all the details shortly.
           </p>
           
-          {isLoading ? (
-            <div className="text-gray-300">Loading booking details...</div>
-          ) : booking ? (
+          {booking ? (
             <Card className="bg-gray-800 border-yellow-500/30 p-8 max-w-2xl mx-auto mb-8">
               <h2 className="text-2xl font-bold text-white mb-6">Booking Details</h2>
               
-              <div className="grid md:grid-cols-2 gap-6 text-left">
+              <div className="grid md:grid-cols-2 gap-6 text-left mb-6">
                 <div>
                   <h3 className="text-yellow-400 font-semibold mb-2 flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
@@ -140,6 +147,15 @@ export default function BookingSuccessPage() {
                   </p>
                 </div>
               </div>
+
+              <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                <h3 className="text-yellow-400 font-semibold mb-2">What's Next?</h3>
+                <ul className="text-gray-300 text-sm space-y-1">
+                  <li>• You will receive a detailed itinerary within 24 hours</li>
+                  <li>• Our local partner will contact you directly</li>
+                  <li>• Prepare for your amazing African adventure!</li>
+                </ul>
+              </div>
             </Card>
           ) : (
             <Card className="bg-gray-800 border-yellow-500/30 p-8 max-w-2xl mx-auto mb-8">
@@ -150,18 +166,16 @@ export default function BookingSuccessPage() {
               {bookingId && (
                 <p className="text-gray-400 text-sm mt-2">Booking ID: {bookingId}</p>
               )}
+              <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                <h3 className="text-yellow-400 font-semibold mb-2">What's Next?</h3>
+                <ul className="text-gray-300 text-sm space-y-1">
+                  <li>• You will receive a detailed itinerary within 24 hours</li>
+                  <li>• Our local partner will contact you directly</li>
+                  <li>• Prepare for your amazing African adventure!</li>
+                </ul>
+              </div>
             </Card>
           )}
-            
-            <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-              <h3 className="text-yellow-400 font-semibold mb-2">What's Next?</h3>
-              <ul className="text-gray-300 text-sm space-y-1">
-                <li>• You will receive a detailed itinerary within 24 hours</li>
-                <li>• Our local partner will contact you directly</li>
-                <li>• Prepare for your amazing African adventure!</li>
-              </ul>
-            </div>
-          </Card>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard">
