@@ -61,7 +61,7 @@ export default function SignInPage() {
               </Link>
             </div>
             <div className="flex space-x-4">
-              <Link href="/auth/sign-up">
+              <Link href="/sign-up">
                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
                   Sign Up
                 </Button>
@@ -142,7 +142,7 @@ export default function SignInPage() {
           <div className="mt-6 text-center">
             <p className="text-gray-300">
               Don't have an account?{' '}
-              <Link href="/auth/sign-up" className="text-yellow-400 hover:underline font-semibold">
+              <Link href="/sign-up" className="text-yellow-400 hover:underline font-semibold">
                 Sign up here
               </Link>
             </p>

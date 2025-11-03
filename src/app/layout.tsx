@@ -4,22 +4,9 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import Footer from '@/components/Footer'
+import { ClerkWrapper } from '@/components/ClerkWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
-
-// Conditionally import and use ClerkProvider
-let ClerkProvider: any = ({ children }: { children: React.ReactNode }) => <>{children}</>
-
-// Only use Clerk if keys are configured
-if (typeof process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'undefined' && 
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== '') {
-  try {
-    const clerk = require('@clerk/nextjs')
-    ClerkProvider = clerk.ClerkProvider
-  } catch (error) {
-    console.warn('Clerk not available, running without authentication')
-  }
-}
 
 export const metadata: Metadata = {
   title: 'AFRICONNECT - Authentic African Travel & Influencer Collaborations',
@@ -61,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkWrapper>
       <html lang="en">
         <body className={inter.className}>
           {children}
@@ -70,6 +57,6 @@ export default function RootLayout({
           <SpeedInsights />
         </body>
       </html>
-    </ClerkProvider>
+    </ClerkWrapper>
   )
 }

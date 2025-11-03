@@ -56,17 +56,17 @@ export function UserProvider({ children }: UserProviderProps) {
  * Hook to get current user data with database info
  */
 export function useCurrentUser() {
-  const { user, isLoaded } = useUser()
+  const { user, isLoaded: clerkLoaded } = useUser()
   const [dbUser, setDbUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (isLoaded && user) {
+    if (clerkLoaded && user) {
       fetchUserData()
-    } else if (isLoaded && !user) {
+    } else if (clerkLoaded && !user) {
       setIsLoading(false)
     }
-  }, [user, isLoaded])
+  }, [user, clerkLoaded])
 
   const fetchUserData = async () => {
     if (!user) return
@@ -87,10 +87,9 @@ export function useCurrentUser() {
   return {
     clerkUser: user,
     dbUser,
-    isLoaded: isLoaded && !isLoading,
+    isLoaded: clerkLoaded && !isLoading,
     role: dbUser?.role || user?.publicMetadata?.role || 'TRAVELER',
   }
 }
 
 export { UserButton }
-

@@ -20,10 +20,10 @@ export default function BusinessesPage() {
               <Link href="/influencers" className="text-gray-600 hover:text-yellow-600 transition-colors">For Influencers</Link>
             </nav>
             <div className="flex space-x-4">
-              <Link href="/auth/sign-in">
+              <Link href="/sign-in">
                 <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Sign In</Button>
               </Link>
-              <Link href="/auth/sign-up">
+              <Link href="/sign-up">
                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Get Started</Button>
               </Link>
             </div>
@@ -46,7 +46,7 @@ export default function BusinessesPage() {
                 List Your Business
               </Button>
             </Link>
-            <Link href="/auth/sign-up">
+            <Link href="/sign-up">
               <Button size="lg" variant="outline" className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black px-8 py-4 text-lg">
                 Join as Business
               </Button>

@@ -84,7 +84,7 @@ export default function SignUpPage() {
               </Link>
             </div>
             <div className="flex space-x-4">
-              <Link href="/auth/sign-in">
+              <Link href="/sign-in">
                 <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">
                   Sign In
                 </Button>

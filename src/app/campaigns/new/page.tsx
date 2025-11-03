@@ -106,10 +106,10 @@ export default function CreateCampaignPage() {
               <Link href="/influencers" className="text-yellow-600 font-semibold">For Influencers</Link>
             </nav>
             <div className="flex space-x-4">
-              <Link href="/auth/sign-in">
+              <Link href="/sign-in">
                 <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Sign In</Button>
               </Link>
-              <Link href="/auth/sign-up">
+              <Link href="/sign-up">
                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Get Started</Button>
               </Link>
             </div>

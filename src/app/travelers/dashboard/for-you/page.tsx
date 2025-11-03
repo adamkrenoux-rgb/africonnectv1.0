@@ -116,7 +116,7 @@ export default function ForYouPage() {
               <Link href="/travelers/dashboard">
                 <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Dashboard</Button>
               </Link>
-              <Link href="/auth/sign-in">
+              <Link href="/sign-in">
                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Sign Out</Button>
               </Link>
             </div>

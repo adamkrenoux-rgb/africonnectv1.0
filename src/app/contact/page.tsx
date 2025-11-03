@@ -51,10 +51,10 @@ export default function ContactPage() {
               <Link href="/influencers" className="text-gray-600 hover:text-yellow-600 transition-colors">For Influencers</Link>
             </nav>
             <div className="flex space-x-4">
-              <Link href="/auth/sign-in">
+              <Link href="/sign-in">
                 <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Sign In</Button>
               </Link>
-              <Link href="/auth/sign-up">
+              <Link href="/sign-up">
                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Get Started</Button>
               </Link>
             </div>
@@ -232,7 +232,7 @@ export default function ContactPage() {
           <h2 className="text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
           <p className="text-xl text-gray-300 mb-8">Join thousands of travelers and businesses already using AFRICONNECT</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/sign-up">
+            <Link href="/sign-up">
               <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 text-lg">
                 Create Account
               </Button>
