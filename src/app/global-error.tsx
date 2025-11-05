@@ -11,10 +11,10 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log error to Sentry (async, won't block render)
     captureException(error, {
       component: 'GlobalErrorBoundary',
       digest: error.digest,
+    })
   }, [error])
 
   return (
