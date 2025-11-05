@@ -16,6 +16,12 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    // Tell webpack to ignore @sentry/nextjs if it's not installed
+    config.resolve.alias = config.resolve.alias || {}
+    config.resolve.alias['@sentry/nextjs'] = false
+    return config
+  },
 }
 
 module.exports = nextConfig

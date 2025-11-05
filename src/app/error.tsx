@@ -15,11 +15,10 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log error to Sentry
+    // Log error to Sentry (async, won't block render)
     captureException(error, {
       component: 'ErrorBoundary',
       digest: error.digest,
-    })
   }, [error])
 
   return (
