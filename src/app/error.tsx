@@ -15,6 +15,7 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
+    // Log error to Sentry
     captureException(error, {
       component: 'ErrorBoundary',
       digest: error.digest,
