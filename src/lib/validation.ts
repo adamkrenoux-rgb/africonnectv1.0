@@ -145,7 +145,14 @@ export const updateUserSchema = z.object({
   bio: z.string().max(1000).optional(),
   profilePicture: z.string().url().optional().or(z.literal('')),
   country: z.string().optional(),
-  socialLinks: z.record(z.string().url()).optional()
+  socialLinks: z.object({
+    facebook: z.string().url().optional().or(z.literal('')),
+    instagram: z.string().url().optional().or(z.literal('')),
+    twitter: z.string().url().optional().or(z.literal('')),
+    youtube: z.string().url().optional().or(z.literal('')),
+    linkedin: z.string().url().optional().or(z.literal('')),
+    website: z.string().url().optional().or(z.literal(''))
+  }).optional()
 })
 
 // Helper function to validate request body

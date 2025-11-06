@@ -24,7 +24,15 @@ export default function SettingsPage() {
     email: '',
     bio: '',
     country: '',
-    profilePicture: ''
+    profilePicture: '',
+    socialLinks: {
+      facebook: '',
+      instagram: '',
+      twitter: '',
+      youtube: '',
+      linkedin: '',
+      website: ''
+    }
   })
 
   const [notificationSettings, setNotificationSettings] = useState({
@@ -49,12 +57,23 @@ export default function SettingsPage() {
     }
 
     if (userLoaded && dbUser) {
+      const socialLinks = typeof dbUser.socialLinks === 'object' && dbUser.socialLinks !== null
+        ? dbUser.socialLinks as any
+        : {}
       setProfileData({
         name: dbUser.name || '',
         email: dbUser.email || '',
         bio: dbUser.bio || '',
         country: dbUser.country || '',
-        profilePicture: dbUser.profilePicture || ''
+        profilePicture: dbUser.profilePicture || '',
+        socialLinks: {
+          facebook: socialLinks.facebook || '',
+          instagram: socialLinks.instagram || '',
+          twitter: socialLinks.twitter || '',
+          youtube: socialLinks.youtube || '',
+          linkedin: socialLinks.linkedin || '',
+          website: socialLinks.website || ''
+        }
       })
       setIsLoading(false)
     } else if (userLoaded && !dbUser) {
@@ -79,6 +98,7 @@ export default function SettingsPage() {
           bio: profileData.bio,
           country: profileData.country,
           profilePicture: profileData.profilePicture,
+          socialLinks: profileData.socialLinks
         })
       })
 
@@ -291,6 +311,93 @@ export default function SettingsPage() {
                         <option>Zambia</option>
                         <option>Other</option>
                       </select>
+                    </div>
+
+                    {/* Social Media Links */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-4">
+                        Social Media Links
+                      </label>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Facebook</label>
+                          <input
+                            type="url"
+                            value={profileData.socialLinks.facebook}
+                            onChange={(e) => setProfileData({
+                              ...profileData,
+                              socialLinks: { ...profileData.socialLinks, facebook: e.target.value }
+                            })}
+                            placeholder="https://facebook.com/yourpage"
+                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Instagram</label>
+                          <input
+                            type="url"
+                            value={profileData.socialLinks.instagram}
+                            onChange={(e) => setProfileData({
+                              ...profileData,
+                              socialLinks: { ...profileData.socialLinks, instagram: e.target.value }
+                            })}
+                            placeholder="https://instagram.com/yourhandle"
+                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Twitter/X</label>
+                          <input
+                            type="url"
+                            value={profileData.socialLinks.twitter}
+                            onChange={(e) => setProfileData({
+                              ...profileData,
+                              socialLinks: { ...profileData.socialLinks, twitter: e.target.value }
+                            })}
+                            placeholder="https://twitter.com/yourhandle"
+                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">YouTube</label>
+                          <input
+                            type="url"
+                            value={profileData.socialLinks.youtube}
+                            onChange={(e) => setProfileData({
+                              ...profileData,
+                              socialLinks: { ...profileData.socialLinks, youtube: e.target.value }
+                            })}
+                            placeholder="https://youtube.com/@yourchannel"
+                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">LinkedIn</label>
+                          <input
+                            type="url"
+                            value={profileData.socialLinks.linkedin}
+                            onChange={(e) => setProfileData({
+                              ...profileData,
+                              socialLinks: { ...profileData.socialLinks, linkedin: e.target.value }
+                            })}
+                            placeholder="https://linkedin.com/in/yourprofile"
+                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Website</label>
+                          <input
+                            type="url"
+                            value={profileData.socialLinks.website}
+                            onChange={(e) => setProfileData({
+                              ...profileData,
+                              socialLinks: { ...profileData.socialLinks, website: e.target.value }
+                            })}
+                            placeholder="https://yourwebsite.com"
+                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

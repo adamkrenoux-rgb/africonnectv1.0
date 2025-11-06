@@ -22,6 +22,8 @@ import {
 } from 'lucide-react'
 import BusinessMap from '@/components/BusinessMap'
 import InquiryForm from '@/components/InquiryForm'
+import ImageGallery from '@/components/ImageGallery'
+import SocialLinks from '@/components/SocialLinks'
 
 interface Business {
   id: string
@@ -41,6 +43,7 @@ interface Business {
     id: string
     name: string
     profilePicture?: string
+    socialLinks?: any
   }
   listings: Array<{
     id: string
@@ -48,6 +51,7 @@ interface Business {
     description: string
     pricing: any
     activityType: string
+    images?: string[]
   }>
   reviews: Array<{
     id: string
@@ -61,6 +65,7 @@ interface Business {
   }>
   averageRating?: number
   reviewCount?: number
+  images?: string[] // Business gallery images
 }
 
 interface RelatedBusiness {
@@ -89,6 +94,16 @@ function BusinessDetailContent() {
     if (businessId) {
       fetchBusiness()
       fetchRelatedBusinesses()
+      // Track page view
+      fetch('/api/analytics/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventType: 'page_view',
+          entityType: 'business',
+          entityId: businessId
+        })
+      }).catch(() => {}) // Silently fail if tracking fails
     }
   }, [businessId])
 
@@ -252,23 +267,25 @@ function BusinessDetailContent() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Image Gallery Placeholder */}
+            {/* Image Gallery */}
             <Card className="bg-gray-800 border-gray-700 p-6">
-              <div className="relative h-64 bg-gradient-to-br from-yellow-600/20 to-orange-500/20 rounded-lg flex items-center justify-center">
-                {business.user.profilePicture ? (
-                  <Image
-                    src={business.user.profilePicture}
-                    alt={business.businessName}
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                ) : (
-                  <span className="text-8xl">🏢</span>
-                )}
-              </div>
-              <p className="text-gray-400 text-sm mt-2 text-center">
-                Image gallery coming soon
-              </p>
+              <h3 className="text-xl font-bold text-white mb-4">Photo Gallery</h3>
+              {business.images && business.images.length > 0 ? (
+                <ImageGallery images={business.images} businessName={business.businessName} />
+              ) : (
+                <div className="relative h-64 bg-gradient-to-br from-yellow-600/20 to-orange-500/20 rounded-lg flex items-center justify-center">
+                  {business.user.profilePicture ? (
+                    <Image
+                      src={business.user.profilePicture}
+                      alt={business.businessName}
+                      fill
+                      className="object-cover rounded-lg"
+                    />
+                  ) : (
+                    <span className="text-8xl">🏢</span>
+                  )}
+                </div>
+              )}
             </Card>
 
             {/* Tabs */}
@@ -330,7 +347,7 @@ function BusinessDetailContent() {
                     {/* Contact Information */}
                     <div>
                       <h3 className="text-xl font-bold text-white mb-3">Contact Information</h3>
-                      <div className="space-y-2">
+                      <div className="space-y-2 mb-4">
                         {business.phone && (
                           <div className="flex items-center gap-2 text-gray-300">
                             <Phone className="w-4 h-4" />
@@ -362,6 +379,14 @@ function BusinessDetailContent() {
                           </div>
                         )}
                       </div>
+                      
+                      {/* Social Media Links */}
+                      {business.user.socialLinks && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-white mb-2">Follow Us</h4>
+                          <SocialLinks socialLinks={business.user.socialLinks} />
+                        </div>
+                      )}
                     </div>
 
                     {/* Trust Score */}

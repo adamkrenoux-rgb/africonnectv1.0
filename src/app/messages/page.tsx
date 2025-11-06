@@ -1,133 +1,138 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Send, Search, MessageCircle, User } from 'lucide-react'
+import { useCurrentUser } from '@/components/UserProvider'
+
+interface Message {
+  id: string
+  content: string
+  read: boolean
+  createdAt: string
+  sender: {
+    id: string
+    name: string
+    profilePicture?: string
+    role: string
+  }
+  receiver: {
+    id: string
+    name: string
+    profilePicture?: string
+    role: string
+  }
+}
+
+interface Conversation {
+  user: {
+    id: string
+    name: string
+    profilePicture?: string
+    role: string
+  }
+  lastMessage?: Message
+  unreadCount: number
+}
 
 export default function MessagesPage() {
-  const [activeConversation, setActiveConversation] = useState<any>(null)
+  const { dbUser, isLoaded } = useCurrentUser()
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [activeConversation, setActiveConversation] = useState<string | null>(null)
+  const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSending, setIsSending] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Mock conversations data - in real app this would come from API
-  const conversations = [
-    {
-      id: '1',
-      name: 'Sarah Johnson',
-      type: 'Traveler',
-      lastMessage: 'Thank you for the amazing safari experience!',
-      timestamp: '2 minutes ago',
-      unread: true,
-      avatar: 'S',
-      messages: [
-        {
-          id: '1',
-          sender: 'Sarah Johnson',
-          message: 'Hi! I\'m interested in booking your Maasai Mara Safari',
-          timestamp: '2 hours ago',
-          isOwn: false
-        },
-        {
-          id: '2',
-          sender: 'You',
-          message: 'Hello Sarah! I\'d be happy to help you plan your safari. What dates are you looking at?',
-          timestamp: '2 hours ago',
-          isOwn: true
-        },
-        {
-          id: '3',
-          sender: 'Sarah Johnson',
-          message: 'We\'re thinking March 15-17, 2024. What\'s included in the package?',
-          timestamp: '1 hour ago',
-          isOwn: false
-        },
-        {
-          id: '4',
-          sender: 'You',
-          message: 'Great dates! The package includes 3 days of game drives, accommodation, all meals, and airport transfers. I\'ll send you the detailed itinerary.',
-          timestamp: '1 hour ago',
-          isOwn: true
-        },
-        {
-          id: '5',
-          sender: 'Sarah Johnson',
-          message: 'Perfect! I\'d like to book it. How do I proceed with payment?',
-          timestamp: '30 minutes ago',
-          isOwn: false
-        },
-        {
-          id: '6',
-          sender: 'You',
-          message: 'I\'ll send you the booking link. Payment is held in escrow until after your trip, so you\'re fully protected.',
-          timestamp: '25 minutes ago',
-          isOwn: true
-        },
-        {
-          id: '7',
-          sender: 'Sarah Johnson',
-          message: 'Thank you for the amazing safari experience!',
-          timestamp: '2 minutes ago',
-          isOwn: false
-        }
-      ]
-    },
-    {
-      id: '2',
-      name: 'TravelWithEmma',
-      type: 'Influencer',
-      lastMessage: 'I would love to collaborate on your safari tours',
-      timestamp: '1 day ago',
-      unread: false,
-      avatar: 'T',
-      messages: [
-        {
-          id: '1',
-          sender: 'TravelWithEmma',
-          message: 'Hi! I saw your safari business and would love to collaborate on content creation.',
-          timestamp: '2 days ago',
-          isOwn: false
-        },
-        {
-          id: '2',
-          sender: 'You',
-          message: 'Hello Emma! I\'d be interested in hearing more about your collaboration ideas.',
-          timestamp: '2 days ago',
-          isOwn: true
-        },
-        {
-          id: '3',
-          sender: 'TravelWithEmma',
-          message: 'I have 125K followers and specialize in wildlife content. I could create 3 Instagram posts and 2 reels showcasing your safari experience.',
-          timestamp: '1 day ago',
-          isOwn: false
-        }
-      ]
-    },
-    {
-      id: '3',
-      name: 'Mike Chen',
-      type: 'Traveler',
-      lastMessage: 'I\'m interested in booking your cultural tour.',
-      timestamp: '3 days ago',
-      unread: false,
-      avatar: 'M',
-      messages: [
-        {
-          id: '1',
-          sender: 'Mike Chen',
-          message: 'Hi! I\'m interested in booking your cultural tour.',
-          timestamp: '3 days ago',
-          isOwn: false
-        }
-      ]
+  useEffect(() => {
+    if (isLoaded && dbUser) {
+      fetchConversations()
     }
-  ]
+  }, [isLoaded, dbUser])
 
-  const sendMessage = () => {
-    if (newMessage.trim()) {
-      // In real app, this would send the message via API
-      console.log('Sending message:', newMessage)
-      setNewMessage('')
+  useEffect(() => {
+    if (activeConversation) {
+      fetchMessages(activeConversation)
+      // Poll for new messages every 5 seconds
+      const interval = setInterval(() => {
+        fetchMessages(activeConversation, false)
+      }, 5000)
+      return () => clearInterval(interval)
+    }
+  }, [activeConversation])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const fetchConversations = async () => {
+    try {
+      const response = await fetch('/api/messages')
+      const data = await response.json()
+
+      if (data.success) {
+        setConversations(data.conversations || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch conversations:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchMessages = async (userId: string, markAsRead = true) => {
+    try {
+      const response = await fetch(`/api/messages?with=${userId}`)
+      const data = await response.json()
+
+      if (data.success) {
+        setMessages(data.messages || [])
+        if (markAsRead) {
+          // Refresh conversations to update unread counts
+          fetchConversations()
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch messages:', error)
+    }
+  }
+
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !activeConversation || isSending) return
+
+    setIsSending(true)
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          receiverId: activeConversation,
+          content: newMessage.trim()
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setNewMessage('')
+        // Add message to local state immediately
+        setMessages(prev => [...prev, data.message])
+        // Refresh conversations to update last message
+        fetchConversations()
+      } else {
+        alert(data.error || 'Failed to send message')
+      }
+    } catch (error: any) {
+      alert(error.message || 'Failed to send message')
+    } finally {
+      setIsSending(false)
     }
   }
 
@@ -136,6 +141,41 @@ export default function MessagesPage() {
       e.preventDefault()
       sendMessage()
     }
+  }
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diff = now.getTime() - date.getTime()
+    const minutes = Math.floor(diff / 60000)
+    const hours = Math.floor(diff / 3600000)
+    const days = Math.floor(diff / 86400000)
+
+    if (minutes < 1) return 'Just now'
+    if (minutes < 60) return `${minutes}m ago`
+    if (hours < 24) return `${hours}h ago`
+    if (days < 7) return `${days}d ago`
+    return date.toLocaleDateString()
+  }
+
+  const filteredConversations = conversations.filter(conv =>
+    conv.user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const activeUser = activeConversation
+    ? conversations.find(c => c.user.id === activeConversation)?.user
+    : null
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    )
   }
 
   return (
@@ -155,128 +195,186 @@ export default function MessagesPage() {
               <Link href="/influencers" className="text-gray-600 hover:text-yellow-600 transition-colors">For Influencers</Link>
             </nav>
             <div className="flex space-x-4">
-              <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Profile</Button>
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Sign Out</Button>
+              <Link href="/settings">
+                <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Settings</Button>
+              </Link>
             </div>
           </div>
         </div>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">Messages</h1>
-          <p className="text-xl text-gray-300">Connect and communicate with other users</p>
+        <div className="mb-6">
+          <h1 className="text-4xl font-bold text-white mb-2">Messages</h1>
+          <p className="text-gray-300">Connect with travelers, businesses, and influencers</p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 h-[600px]">
+        <div className="grid lg:grid-cols-3 gap-6 h-[calc(100vh-250px)]">
           {/* Conversations List */}
-          <div className="lg:col-span-1">
-            <Card className="bg-gray-800 border-yellow-500/30 h-full">
+          <div className="lg:col-span-1 flex flex-col">
+            <Card className="bg-gray-800 border-gray-700 flex-1 flex flex-col">
+              {/* Search */}
               <div className="p-4 border-b border-gray-700">
-                <h3 className="text-lg font-semibold text-white">Conversations</h3>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Search conversations..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  />
+                </div>
               </div>
-              <div className="overflow-y-auto h-full">
-                {conversations.map((conversation) => (
-                  <button
-                    key={conversation.id}
-                    onClick={() => setActiveConversation(conversation)}
-                    className={`w-full p-4 text-left hover:bg-gray-700 transition-colors border-b border-gray-700 ${
-                      activeConversation?.id === conversation.id ? 'bg-gray-700' : ''
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
-                        <span className="text-black font-bold">
-                          {conversation.avatar}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-white font-semibold truncate">{conversation.name}</h4>
-                          <span className="text-gray-400 text-xs">{conversation.timestamp}</span>
+
+              {/* Conversations */}
+              <div className="flex-1 overflow-y-auto">
+                {isLoading ? (
+                  <div className="p-4 text-center text-gray-400">Loading conversations...</div>
+                ) : filteredConversations.length === 0 ? (
+                  <div className="p-4 text-center text-gray-400">
+                    {searchQuery ? 'No conversations found' : 'No conversations yet'}
+                  </div>
+                ) : (
+                  filteredConversations.map((conversation) => (
+                    <button
+                      key={conversation.user.id}
+                      onClick={() => setActiveConversation(conversation.user.id)}
+                      className={`w-full p-4 border-b border-gray-700 hover:bg-gray-700/50 transition-colors text-left ${
+                        activeConversation === conversation.user.id ? 'bg-gray-700/50' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          {conversation.user.profilePicture ? (
+                            <Image
+                              src={conversation.user.profilePicture}
+                              alt={conversation.user.name}
+                              width={48}
+                              height={48}
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <User className="w-6 h-6 text-gray-400" />
+                          )}
                         </div>
-                        <p className="text-gray-300 text-sm truncate">{conversation.lastMessage}</p>
-                        {conversation.unread && (
-                          <div className="w-2 h-2 bg-yellow-500 rounded-full mt-1"></div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="font-semibold text-white truncate">{conversation.user.name}</p>
+                            {conversation.lastMessage && (
+                              <span className="text-gray-500 text-xs flex-shrink-0 ml-2">
+                                {formatTime(conversation.lastMessage.createdAt)}
+                              </span>
+                            )}
+                          </div>
+                          {conversation.lastMessage && (
+                            <p className="text-gray-400 text-sm truncate">
+                              {conversation.lastMessage.content}
+                            </p>
+                          )}
+                        </div>
+                        {conversation.unreadCount > 0 && (
+                          <div className="bg-yellow-500 text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                            {conversation.unreadCount}
+                          </div>
                         )}
                       </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))
+                )}
               </div>
             </Card>
           </div>
 
-          {/* Chat Area */}
-          <div className="lg:col-span-2">
-            {activeConversation ? (
-              <Card className="bg-gray-800 border-yellow-500/30 h-full flex flex-col">
+          {/* Messages */}
+          <div className="lg:col-span-2 flex flex-col">
+            {activeConversation && activeUser ? (
+              <Card className="bg-gray-800 border-gray-700 flex-1 flex flex-col">
                 {/* Chat Header */}
-                <div className="p-4 border-b border-gray-700">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
-                      <span className="text-black font-bold">
-                        {activeConversation.avatar}
-                      </span>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold">{activeConversation.name}</h4>
-                      <p className="text-gray-400 text-sm">{activeConversation.type}</p>
-                    </div>
+                <div className="p-4 border-b border-gray-700 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
+                    {activeUser.profilePicture ? (
+                      <Image
+                        src={activeUser.profilePicture}
+                        alt={activeUser.name}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <User className="w-5 h-5 text-gray-400" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">{activeUser.name}</p>
+                    <p className="text-gray-400 text-xs">{activeUser.role}</p>
                   </div>
                 </div>
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {activeConversation.messages.map((message: any) => (
-                    <div
-                      key={message.id}
-                      className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                          message.isOwn
-                            ? 'bg-yellow-500 text-black'
-                            : 'bg-gray-700 text-white'
-                        }`}
-                      >
-                        <p className="text-sm">{message.message}</p>
-                        <p className={`text-xs mt-1 ${
-                          message.isOwn ? 'text-gray-600' : 'text-gray-400'
-                        }`}>
-                          {message.timestamp}
-                        </p>
-                      </div>
+                  {messages.length === 0 ? (
+                    <div className="text-center text-gray-400 py-8">
+                      <MessageCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p>No messages yet. Start the conversation!</p>
                     </div>
-                  ))}
+                  ) : (
+                    messages.map((message) => {
+                      const isOwn = message.sender.id === dbUser?.id
+                      return (
+                        <div
+                          key={message.id}
+                          className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div className={`max-w-[70%] ${isOwn ? 'order-2' : ''}`}>
+                            <div
+                              className={`rounded-lg p-3 ${
+                                isOwn
+                                  ? 'bg-yellow-500 text-black'
+                                  : 'bg-gray-700 text-white'
+                              }`}
+                            >
+                              <p className="text-sm whitespace-pre-wrap break-words">
+                                {message.content}
+                              </p>
+                            </div>
+                            <p className="text-gray-500 text-xs mt-1 px-2">
+                              {formatTime(message.createdAt)}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
 
                 {/* Message Input */}
                 <div className="p-4 border-t border-gray-700">
-                  <div className="flex space-x-2">
-                    <input
-                      type="text"
+                  <div className="flex gap-2">
+                    <textarea
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Type your message..."
-                      className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                      placeholder="Type a message..."
+                      rows={2}
+                      className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none"
                     />
                     <Button
                       onClick={sendMessage}
+                      disabled={!newMessage.trim() || isSending}
                       className="bg-yellow-500 hover:bg-yellow-600 text-black"
                     >
-                      Send
+                      <Send className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
               </Card>
             ) : (
-              <Card className="bg-gray-800 border-yellow-500/30 h-full flex items-center justify-center">
+              <Card className="bg-gray-800 border-gray-700 flex-1 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-6xl mb-4">💬</div>
-                  <h3 className="text-2xl font-semibold text-white mb-4">Select a Conversation</h3>
-                  <p className="text-gray-300">Choose a conversation from the list to start messaging</p>
+                  <MessageCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400">Select a conversation to start messaging</p>
                 </div>
               </Card>
             )}
