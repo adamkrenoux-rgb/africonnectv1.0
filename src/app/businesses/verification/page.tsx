@@ -414,14 +414,23 @@ export default function BusinessVerificationPage() {
                     <label className="block text-white font-semibold mb-2">
                       {docType.label} {docType.required && <span className="text-red-400">*</span>}
                     </label>
-                    <FileUpload
-                      bucket="verification-docs"
-                      businessId={business.id}
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      maxSize={10 * 1024 * 1024} // 10MB
-                      onFileSelect={(file) => handleFileChange(fieldName, file)}
-                      className="w-full"
-                    />
+                    <div>
+                      <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) {
+                            if (file.size > 10 * 1024 * 1024) {
+                              alert('File size must be less than 10MB')
+                              return
+                            }
+                            handleFileChange(fieldName, file)
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-yellow-500 file:text-black hover:file:bg-yellow-600"
+                      />
+                    </div>
                     {file && (
                       <p className="text-gray-400 text-sm mt-2">
                         Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
