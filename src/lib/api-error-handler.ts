@@ -30,7 +30,32 @@ export function handleApiError(error: unknown, context?: Record<string, any>): N
     })
   }
 
-  // Handle Prisma errors
+  // Handle Prisma database connection errors
+  if (apiError.code === 'P1001') {
+    console.error('[API Error] Database connection failed:', apiError.message)
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Database connection failed. Please check your configuration.',
+        code: 'DATABASE_CONNECTION_ERROR'
+      },
+      { status: 503 }
+    )
+  }
+
+  if (apiError.code === 'P1012') {
+    console.error('[API Error] Database URL missing:', apiError.message)
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Database configuration is missing. Please set DATABASE_URL.',
+        code: 'DATABASE_CONFIG_ERROR'
+      },
+      { status: 503 }
+    )
+  }
+
+  // Handle other Prisma errors
   if (apiError.code === 'P2002') {
     return NextResponse.json(
       { success: false, error: 'Duplicate entry' },
@@ -49,6 +74,22 @@ export function handleApiError(error: unknown, context?: Record<string, any>): N
     return NextResponse.json(
       { success: false, error: 'Record not found' },
       { status: 404 }
+    )
+  }
+
+  // Check for database-related error messages
+  const errorMessage = apiError.message?.toLowerCase() || ''
+  if (errorMessage.includes('can\'t reach database') || 
+      errorMessage.includes('database') && errorMessage.includes('connection') ||
+      errorMessage.includes('environment variable not found: database_url')) {
+    console.error('[API Error] Database error detected:', apiError.message)
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Database connection failed. Please check your configuration.',
+        code: 'DATABASE_ERROR'
+      },
+      { status: 503 }
     )
   }
 
