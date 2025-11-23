@@ -14,87 +14,8 @@ export default function BrowseExperiencesPage() {
     activityType: ''
   })
 
-  // Mock experiences data
-  const experiences = [
-    {
-      id: '1',
-      title: 'Maasai Mara Safari Adventure',
-      business: 'Serengeti Safari Tours',
-      location: 'Kenya',
-      price: 450,
-      duration: '3 days',
-      rating: 4.9,
-      reviews: 127,
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      type: 'Safari',
-      verified: true
-    },
-    {
-      id: '2',
-      title: 'Victoria Falls Adventure',
-      business: 'Zambezi Adventures',
-      location: 'Zambia',
-      price: 380,
-      duration: '2 days',
-      rating: 4.8,
-      reviews: 89,
-      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop',
-      type: 'Adventure',
-      verified: true
-    },
-    {
-      id: '3',
-      title: 'Cape Town City Tour',
-      business: 'Cape Adventures',
-      location: 'South Africa',
-      price: 120,
-      duration: '1 day',
-      rating: 4.7,
-      reviews: 156,
-      image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop',
-      type: 'Cultural',
-      verified: true
-    },
-    {
-      id: '4',
-      title: 'Bazaruto Island Diving',
-      business: 'Mozambique Diving Co',
-      location: 'Mozambique',
-      price: 280,
-      duration: '2 days',
-      rating: 4.9,
-      reviews: 73,
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      type: 'Water Sports',
-      verified: true
-    },
-    {
-      id: '5',
-      title: 'Serengeti Migration Safari',
-      business: 'Tanzania Safari Experts',
-      location: 'Tanzania',
-      price: 520,
-      duration: '4 days',
-      rating: 4.9,
-      reviews: 203,
-      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop',
-      type: 'Safari',
-      verified: true
-    },
-    {
-      id: '6',
-      title: 'Cultural Village Experience',
-      business: 'Authentic Africa Tours',
-      location: 'Ghana',
-      price: 95,
-      duration: '1 day',
-      rating: 4.6,
-      reviews: 45,
-      image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop',
-      type: 'Cultural',
-      verified: true
-    }
-  ]
+  // No experiences yet - will be populated from database when businesses create listings
+  const experiences: Array<any> = []
 
   const filteredExperiences = experiences.filter(exp => {
     if (filters.location && !exp.location.toLowerCase().includes(filters.location.toLowerCase())) return false
@@ -285,13 +206,22 @@ export default function BrowseExperiencesPage() {
 
             {filteredExperiences.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-gray-300 text-lg">No experiences found matching your filters.</p>
-                <Button
-                  onClick={() => setFilters({location: '', priceRange: '', duration: '', activityType: ''})}
-                  className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-black"
-                >
-                  Clear Filters
-                </Button>
+                <p className="text-gray-300 text-xl mb-2">No experiences available yet.</p>
+                <p className="text-gray-400 mb-6">Be the first to discover authentic African experiences as businesses join the platform.</p>
+                {experiences.length === 0 ? (
+                  <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 max-w-md mx-auto">
+                    <p className="text-gray-300 text-sm">
+                      This is a blank slate. When verified businesses create listings, they will appear here.
+                    </p>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => setFilters({location: '', priceRange: '', duration: '', activityType: ''})}
+                    className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-black"
+                  >
+                    Clear Filters
+                  </Button>
+                )}
               </div>
             )}
           </div>
