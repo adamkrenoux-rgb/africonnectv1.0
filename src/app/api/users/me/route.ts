@@ -78,10 +78,34 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ success: true, user: dbUser }, { status: 200 })
     } catch (dbError: any) {
-      // Database connection error
-      console.error('Database error:', dbError?.message || 'Unknown database error')
+      // Database connection error - handle gracefully
+      console.error('[API /users/me] Database error:', dbError?.message || 'Unknown database error')
+      
+      // Check for specific database connection errors
+      if (dbError?.code === 'P1001' || dbError?.code === 'P1012' || 
+          dbError?.message?.includes('database') || 
+          dbError?.message?.includes('DATABASE_URL') ||
+          dbError?.message?.includes('Can\'t reach database')) {
+        console.warn('[API /users/me] Database unavailable, returning service unavailable')
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Database connection unavailable. Please try again later.',
+            dbConfigured: false,
+            code: dbError?.code || 'DATABASE_ERROR'
+          },
+          { status: 503 } // Service Unavailable
+        )
+      }
+      
+      // For other database errors, return 500
       return NextResponse.json(
-        { success: false, error: 'Database connection failed', dbConfigured: false },
+        { 
+          success: false, 
+          error: 'Database error occurred', 
+          dbConfigured: true,
+          code: dbError?.code || 'UNKNOWN_ERROR'
+        },
         { status: 500 }
       )
     }

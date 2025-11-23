@@ -33,6 +33,15 @@ export default function Dashboard() {
             router.replace('/sign-in?redirect_url=/dashboard')
             return
           }
+          
+          // If database is unavailable (503), show error message
+          if (response.status === 503) {
+            const data = await response.json().catch(() => ({}))
+            setError(data.error || 'Database connection unavailable. Please try again later.')
+            // Don't redirect, let user see the error
+            return
+          }
+          
           // For other errors, default to traveler dashboard
           console.warn('[Dashboard] API failed, defaulting to traveler dashboard')
           hasRedirected.current = true
