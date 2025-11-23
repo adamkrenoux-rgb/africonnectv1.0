@@ -96,8 +96,18 @@ export async function getCurrentUser() {
       }
 
       return dbUser
-    } catch (databaseError) {
-      console.error('Failed to sync Clerk user with database, using fallback user:', databaseError)
+    } catch (databaseError: any) {
+      console.error('[getCurrentUser] Database error:', databaseError?.message || databaseError)
+      // If database is unavailable, return null instead of fallback to prevent false authentication
+      if (databaseError?.code === 'P1001' || databaseError?.code === 'P1012' || 
+          databaseError?.message?.includes('database') || 
+          databaseError?.message?.includes('DATABASE_URL') ||
+          databaseError?.message?.includes('Can\'t reach database')) {
+        console.warn('[getCurrentUser] Database unavailable, returning null')
+        return null
+      }
+      // For other database errors, use fallback user
+      console.warn('[getCurrentUser] Database error (non-connection), using fallback user')
       return fallbackUser
     }
   } catch (error) {
@@ -127,8 +137,19 @@ export async function hasRole(role: string) {
  */
 export async function getUserByClerkId(clerkId: string) {
   if (!clerkId) return null
-  return await prisma.user.findUnique({
-    where: { clerkId }
-  })
+  try {
+    return await prisma.user.findUnique({
+      where: { clerkId }
+    })
+  } catch (error: any) {
+    console.error('[getUserByClerkId] Database error:', error?.message || error)
+    // Return null if database is unavailable
+    if (error?.code === 'P1001' || error?.code === 'P1012' || 
+        error?.message?.includes('database') || 
+        error?.message?.includes('DATABASE_URL')) {
+      return null
+    }
+    throw error
+  }
 }
 
