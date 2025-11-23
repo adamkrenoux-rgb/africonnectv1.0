@@ -21,7 +21,7 @@ function SignInContent() {
   useEffect(() => {
     if (isLoaded && isSignedIn) {
       console.log('[SignIn] User already signed in, redirecting to dashboard')
-      router.push(redirectUrl)
+      router.replace(redirectUrl)
     }
   }, [isLoaded, isSignedIn, router, redirectUrl])
 
@@ -63,7 +63,6 @@ function SignInContent() {
           path="/sign-in"
           signUpUrl="/sign-up"
           fallbackRedirectUrl={redirectUrl}
-          forceRedirectUrl={redirectUrl}
           appearance={{
             elements: {
               formButtonPrimary: 'bg-yellow-500 hover:bg-yellow-600 text-black',
