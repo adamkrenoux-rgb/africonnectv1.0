@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useUser } from '@clerk/nextjs'
 
 const ROLE_REDIRECTS: Record<string, string> = {
   TRAVELER: '/travelers/dashboard',
@@ -13,20 +12,12 @@ const ROLE_REDIRECTS: Record<string, string> = {
 
 export default function Dashboard() {
   const router = useRouter()
-  const { isLoaded, isSignedIn } = useUser()
   const hasRedirected = useRef(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     // Prevent multiple redirects
     if (hasRedirected.current) return
-
-    if (!isLoaded) return
-
-    if (!isSignedIn) {
-      hasRedirected.current = true
-      router.replace('/sign-in?redirect_url=/dashboard')
-      return
-    }
 
     // Fetch user role from API
     const fetchUserRole = async () => {
@@ -34,14 +25,23 @@ export default function Dashboard() {
 
       try {
         const response = await fetch('/api/users/me')
+        
         if (!response.ok) {
-          // If API fails, default to traveler dashboard
+          // If API fails (401 = not authenticated), redirect to sign-in
+          if (response.status === 401) {
+            hasRedirected.current = true
+            router.replace('/sign-in?redirect_url=/dashboard')
+            return
+          }
+          // For other errors, default to traveler dashboard
+          console.warn('[Dashboard] API failed, defaulting to traveler dashboard')
           hasRedirected.current = true
           router.replace('/travelers/dashboard')
           return
         }
 
         const data = await response.json()
+        
         if (data.success && data.user) {
           const role = data.user.role || 'TRAVELER'
           const destination = ROLE_REDIRECTS[role] || '/travelers/dashboard'
@@ -49,19 +49,47 @@ export default function Dashboard() {
           router.replace(destination)
         } else {
           // Default to traveler dashboard if no role found
+          console.warn('[Dashboard] No user role found, defaulting to traveler dashboard')
           hasRedirected.current = true
           router.replace('/travelers/dashboard')
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('[Dashboard] Error fetching user role:', error)
-        // Default to traveler dashboard on error
-        hasRedirected.current = true
-        router.replace('/travelers/dashboard')
+        setError(error?.message || 'Failed to load dashboard')
+        // Default to traveler dashboard on error after a delay
+        setTimeout(() => {
+          if (!hasRedirected.current) {
+            hasRedirected.current = true
+            router.replace('/travelers/dashboard')
+          }
+        }, 2000)
       }
     }
 
     fetchUserRole()
-  }, [isLoaded, isSignedIn, router])
+  }, [router])
+
+  // Show error state if something went wrong
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black">
+        <div className="text-center max-w-md px-4">
+          <div className="text-red-500 text-xl mb-4">⚠️</div>
+          <p className="text-gray-300 mb-4">{error}</p>
+          <button
+            onClick={() => {
+              setError(null)
+              hasRedirected.current = false
+              window.location.reload()
+            }}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-medium"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   // Show loading state while checking auth and fetching role
   return (
