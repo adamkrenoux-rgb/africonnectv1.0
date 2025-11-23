@@ -1,4 +1,4 @@
-# Auth.js Setup Guide for AFRICONNECT
+# Auth.js Setup Guide for Connexus
 
 ## Installation
 

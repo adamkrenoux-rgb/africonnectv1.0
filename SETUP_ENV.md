@@ -33,7 +33,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
 CLERK_WEBHOOK_SECRET=whsec_your_webhook_secret_here
 
 # Database (if you have it)
-DATABASE_URL="postgresql://username:password@localhost:5432/africonnect"
+DATABASE_URL="postgresql://username:password@localhost:5432/connexus"
 
 # OpenAI (if you have it)
 OPENAI_API_KEY=sk-your-openai-key-here

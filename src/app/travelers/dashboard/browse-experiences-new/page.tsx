@@ -96,7 +96,7 @@ export default function BrowseExperiencesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-              AFRICONNECT
+              Connexus
             </Link>
             <nav className="hidden md:flex space-x-8">
               <Link href="/travelers" className="text-yellow-600 font-semibold">For Travelers</Link>

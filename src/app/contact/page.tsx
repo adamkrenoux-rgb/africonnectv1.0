@@ -42,7 +42,7 @@ export default function ContactPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                AFRICONNECT
+                Connexus
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -69,7 +69,7 @@ export default function ContactPage() {
             Get in <span className="text-yellow-400">Touch</span>
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-            Have questions? Need help? We're here to assist you with your AFRICONNECT experience.
+            Have questions? Need help? We're here to assist you with your Connexus experience.
           </p>
         </div>
       </section>
@@ -84,7 +84,7 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Email Support</h3>
               <p className="text-gray-300 text-sm mb-4">Get help via email</p>
-              <p className="text-yellow-400 font-medium">support@africonnect.com</p>
+              <p className="text-yellow-400 font-medium">support@connexus.com</p>
             </Card>
 
             <Card className="bg-gray-800 border-gray-700 p-6 text-center">
@@ -93,7 +93,7 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Business Inquiries</h3>
               <p className="text-gray-300 text-sm mb-4">Partnerships and business</p>
-              <p className="text-yellow-400 font-medium">business@africonnect.com</p>
+              <p className="text-yellow-400 font-medium">business@connexus.com</p>
             </Card>
 
             <Card className="bg-gray-800 border-gray-700 p-6 text-center">
@@ -102,7 +102,7 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Partnerships</h3>
               <p className="text-gray-300 text-sm mb-4">Collaboration opportunities</p>
-              <p className="text-yellow-400 font-medium">partnerships@africonnect.com</p>
+              <p className="text-yellow-400 font-medium">partnerships@connexus.com</p>
             </Card>
           </div>
 
@@ -230,7 +230,7 @@ export default function ContactPage() {
       <section className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
-          <p className="text-xl text-gray-300 mb-8">Join thousands of travelers and businesses already using AFRICONNECT</p>
+          <p className="text-xl text-gray-300 mb-8">Join thousands of travelers and businesses already using Connexus</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/sign-up">
               <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 text-lg">

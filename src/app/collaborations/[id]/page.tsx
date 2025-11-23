@@ -241,7 +241,7 @@ export default function CollaborationPage({ params }: { params: { id: string } }
                   <h4 className="font-semibold text-blue-800 mb-2">💰 Payment Protection</h4>
                   <p className="text-blue-700 text-sm">
                     Payment is held in escrow until content is delivered and approved. 
-                    AFRICONNECT takes a 12% commission on successful collaborations.
+                    Connexus takes a 12% commission on successful collaborations.
                   </p>
                 </div>
               </div>

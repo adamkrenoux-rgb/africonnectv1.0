@@ -10,7 +10,7 @@ export default function TermsPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                AFRICONNECT
+                Connexus
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -48,12 +48,12 @@ export default function TermsPage() {
           <div className="prose prose-lg prose-invert max-w-none">
             <h2 className="text-2xl font-bold text-white mb-6">1. Acceptance of Terms</h2>
             <p className="text-gray-300 leading-relaxed mb-6">
-              By accessing and using AFRICONNECT ("the Platform"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+              By accessing and using Connexus ("the Platform"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
             </p>
 
             <h2 className="text-2xl font-bold text-white mb-6">2. Description of Service</h2>
             <p className="text-gray-300 leading-relaxed mb-6">
-              AFRICONNECT is an AI-powered platform that connects travelers with verified African tourism businesses and facilitates collaborations between businesses and travel influencers. Our service includes but is not limited to:
+              Connexus is an AI-powered platform that connects travelers with verified African tourism businesses and facilitates collaborations between businesses and travel influencers. Our service includes but is not limited to:
             </p>
             <ul className="text-gray-300 list-disc list-inside mb-6 space-y-2">
               <li>AI-powered trip planning and itinerary generation</li>
@@ -76,7 +76,7 @@ export default function TermsPage() {
 
             <h2 className="text-2xl font-bold text-white mb-6">4. Booking and Payment Terms</h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-              When booking experiences through AFRICONNECT:
+              When booking experiences through Connexus:
             </p>
             <ul className="text-gray-300 list-disc list-inside mb-6 space-y-2">
               <li>All bookings are subject to availability and business confirmation</li>
@@ -88,12 +88,12 @@ export default function TermsPage() {
 
             <h2 className="text-2xl font-bold text-white mb-6">5. Business Verification and Standards</h2>
             <p className="text-gray-300 leading-relaxed mb-6">
-              All businesses on AFRICONNECT undergo a verification process including document verification, background checks, and quality assessments. However, we cannot guarantee the performance of any business or the quality of experiences. Users book at their own risk.
+              All businesses on Connexus undergo a verification process including document verification, background checks, and quality assessments. However, we cannot guarantee the performance of any business or the quality of experiences. Users book at their own risk.
             </p>
 
             <h2 className="text-2xl font-bold text-white mb-6">6. Intellectual Property Rights</h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-              The Platform and its original content, features, and functionality are owned by AFRICONNECT and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
+              The Platform and its original content, features, and functionality are owned by Connexus and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
             </p>
             <p className="text-gray-300 leading-relaxed mb-6">
               You may not reproduce, distribute, modify, create derivative works of, publicly display, publicly perform, republish, download, store, or transmit any of our material without our prior written consent.
@@ -114,7 +114,7 @@ export default function TermsPage() {
 
             <h2 className="text-2xl font-bold text-white mb-6">8. Limitation of Liability</h2>
             <p className="text-gray-300 leading-relaxed mb-6">
-              In no event shall AFRICONNECT, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the Platform.
+              In no event shall Connexus, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the Platform.
             </p>
 
             <h2 className="text-2xl font-bold text-white mb-6">9. Dispute Resolution</h2>
@@ -132,7 +132,7 @@ export default function TermsPage() {
               If you have any questions about these Terms of Service, please contact us at:
             </p>
             <div className="bg-gray-800 p-6 rounded-lg">
-              <p className="text-gray-300 mb-2">Email: legal@africonnect.com</p>
+              <p className="text-gray-300 mb-2">Email: legal@connexus.com</p>
               <p className="text-gray-300 mb-2">Address: [Company Address]</p>
               <p className="text-gray-300">Phone: [Contact Number]</p>
             </div>

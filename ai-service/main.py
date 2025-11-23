@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 import joblib
 
-app = FastAPI(title="AFRICONNECT AI Service", version="1.0.0")
+app = FastAPI(title="Connexus AI Service", version="1.0.0")
 
 # CORS middleware
 app.add_middleware(
@@ -116,7 +116,7 @@ class AIService:
                 "high_season": request.current_pricing * 1.2 if request.current_pricing else 150,
                 "peak_season": request.current_pricing * 1.5 if request.current_pricing else 200
             },
-            "hashtags": ["#africonnect", "#travel", "#adventure", f"#{request.location.lower()}"],
+            "hashtags": ["#connexus", "#travel", "#adventure", f"#{request.location.lower()}"],
             "social_posts": [
                 f"Ready for an amazing {request.business_type} experience in {request.location}?",
                 f"Book your {request.business_name} adventure today!"
@@ -175,7 +175,7 @@ ai_service = AIService()
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "AFRICONNECT AI Service"}
+    return {"status": "healthy", "service": "Connexus AI Service"}
 
 @app.post("/generate-itinerary")
 async def generate_itinerary(preferences: TripPreferences):

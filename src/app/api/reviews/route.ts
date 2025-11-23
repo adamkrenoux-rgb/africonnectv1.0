@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { validateRequest, createReviewSchema } from '@/lib/validation'
+import { Prisma, VerificationStatus } from '@prisma/client'
 
 // GET /api/reviews - Get all reviews with filters
 export async function GET(request: NextRequest) {
@@ -84,7 +85,11 @@ export async function POST(request: NextRequest) {
       travelerId,
       businessId,
       rating,
-      comment
+      comment,
+      travelerType,
+      isVerifiedReviewer,
+      verificationEvidence,
+      language
     } = validation.data
 
     // Verify booking exists and is completed
@@ -106,6 +111,57 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Ensure business is verified
+    const business = await prisma.business.findUnique({
+      where: { id: businessId },
+      include: {
+        verifications: {
+          where: { verificationStatus: VerificationStatus.VERIFIED },
+          take: 1
+        }
+      }
+    })
+
+    if (!business) {
+      return NextResponse.json(
+        { success: false, error: 'Business not found' },
+        { status: 404 }
+      )
+    }
+
+    const hasVerifiedDocuments =
+      business.verificationBadge ||
+      Boolean(business.identityDocumentUrl) ||
+      (business.verifications && business.verifications.length > 0)
+
+    if (!hasVerifiedDocuments) {
+      return NextResponse.json(
+        { success: false, error: 'Business must be verified before receiving reviews' },
+        { status: 400 }
+      )
+    }
+
+    // Determine traveler verification status
+    const travelerProfile = await prisma.travelerProfile.findUnique({
+      where: { userId: travelerId },
+      select: {
+        travelerType: true,
+        identityVerified: true,
+        verificationDocumentUrl: true,
+        verificationDocumentType: true,
+        preferredLanguages: true
+      }
+    })
+
+    const derivedVerificationEvidence =
+      verificationEvidence ||
+      (travelerProfile?.verificationDocumentUrl
+        ? {
+            documentUrl: travelerProfile.verificationDocumentUrl,
+            documentType: travelerProfile.verificationDocumentType
+          }
+        : undefined)
+
     // Check if review already exists
     const existingReview = await prisma.review.findUnique({
       where: { bookingId }
@@ -125,7 +181,12 @@ export async function POST(request: NextRequest) {
         travelerId,
         businessId,
         rating,
-        comment
+        comment,
+        travelerType: travelerType || travelerProfile?.travelerType,
+        isVerifiedReviewer:
+          isVerifiedReviewer ?? Boolean(travelerProfile?.identityVerified || travelerProfile?.verificationDocumentUrl),
+        verificationEvidence: derivedVerificationEvidence ?? Prisma.JsonNull,
+        language: language || travelerProfile?.preferredLanguages?.[0] || null
       },
       include: {
         traveler: {

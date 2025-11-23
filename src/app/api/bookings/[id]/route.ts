@@ -48,10 +48,19 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, booking }, { status: 200 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching booking:', error)
+    
+    // Check if it's a database connection error
+    if (error.code === 'P1001' || error.message?.includes('connect') || error.message?.includes('database')) {
+      return NextResponse.json(
+        { success: false, error: 'Database connection failed', dbConfigured: false },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch booking' },
+      { success: false, error: error.message || 'Failed to fetch booking' },
       { status: 500 }
     )
   }

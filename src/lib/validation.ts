@@ -1,5 +1,11 @@
 import { z } from 'zod'
 
+// Shared enums
+const entityTypeEnum = z.enum(['BUSINESS', 'LISTING', 'CAMPAIGN', 'ITINERARY', 'OTHER'])
+const disputeTargetTypeEnum = z.enum(['BOOKING', 'CAMPAIGN', 'APPLICATION'])
+const disputeStatusEnum = z.enum(['OPEN', 'UNDER_REVIEW', 'RESOLVED', 'REJECTED', 'CANCELLED'])
+const promotionStatusEnum = z.enum(['DRAFT', 'ACTIVE', 'PAUSED', 'COMPLETED', 'CANCELLED'])
+
 // Business validation schemas
 export const createBusinessSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
@@ -13,6 +19,25 @@ export const createBusinessSchema = z.object({
   website: z.string().url().optional().or(z.literal('')),
   phone: z.string().optional(),
   email: z.string().email().optional().or(z.literal(''))
+})
+
+// Influencer portfolio
+export const influencerPortfolioUpsertSchema = z.object({
+  headline: z.string().max(200).optional(),
+  bio: z.string().max(5000).optional(),
+  stats: z.record(z.any()).optional(),
+  niches: z.array(z.string()).optional(),
+  links: z
+    .object({
+      instagram: z.string().url().optional().or(z.literal('')),
+      youtube: z.string().url().optional().or(z.literal('')),
+      tiktok: z.string().url().optional().or(z.literal('')),
+      twitter: z.string().url().optional().or(z.literal('')),
+      website: z.string().url().optional().or(z.literal(''))
+    })
+    .partial()
+    .optional(),
+  media: z.array(z.object({ type: z.enum(['image', 'video']), url: z.string().url(), caption: z.string().optional() })).optional()
 })
 
 export const updateBusinessSchema = createBusinessSchema.partial().extend({
@@ -52,6 +77,55 @@ export const createListingSchema = z.object({
 
 export const updateListingSchema = createListingSchema.partial().extend({
   id: z.string().min(1, 'Listing ID is required')
+})
+
+// Favorites
+export const createFavoriteSchema = z.object({
+  entityType: entityTypeEnum,
+  entityId: z.string().min(1, 'Entity ID is required')
+})
+
+export const deleteFavoriteSchema = z.object({
+  entityType: entityTypeEnum,
+  entityId: z.string().min(1, 'Entity ID is required')
+})
+
+// Promotions
+export const createPromotionSchema = z.object({
+  businessId: z.string().optional(),
+  listingId: z.string().optional(),
+  region: z.string().optional(),
+  budgetCents: z.number().int().nonnegative().default(0),
+  startAt: z.string().optional(),
+  endAt: z.string().optional(),
+  priorityBoost: z.number().int().min(0).max(100).optional()
+}).refine((data) => Boolean(data.businessId || data.listingId), {
+  message: 'Either businessId or listingId is required'
+})
+
+export const updatePromotionSchema = z.object({
+  status: promotionStatusEnum.optional(),
+  budgetCents: z.number().int().nonnegative().optional(),
+  priorityBoost: z.number().int().min(0).max(100).optional(),
+  startAt: z.string().optional(),
+  endAt: z.string().optional()
+})
+
+// Disputes
+export const createDisputeSchema = z.object({
+  targetType: disputeTargetTypeEnum,
+  targetId: z.string().min(1, 'Target ID is required'),
+  reason: z.string().min(3).max(500),
+  details: z.string().max(5000).optional()
+})
+
+export const updateDisputeStatusSchema = z.object({
+  status: disputeStatusEnum,
+  resolutionNotes: z.string().max(5000).optional()
+})
+
+export const addDisputeMessageSchema = z.object({
+  content: z.string().min(1).max(5000)
 })
 
 // Booking validation schemas
@@ -118,7 +192,11 @@ export const createReviewSchema = z.object({
   businessId: z.string().min(1, 'Business ID is required'),
   rating: z.number().int().min(1).max(5, 'Rating must be between 1 and 5'),
   comment: z.string().max(2000).optional(),
-  response: z.string().max(2000).optional()
+  response: z.string().max(2000).optional(),
+  travelerType: z.enum(['EXPAT', 'DIPLOMAT', 'TOURIST', 'LOCAL', 'OTHER']).optional(),
+  isVerifiedReviewer: z.boolean().optional(),
+  verificationEvidence: z.record(z.any()).optional(),
+  language: z.string().max(10).optional()
 })
 
 export const updateReviewSchema = z.object({
@@ -126,6 +204,62 @@ export const updateReviewSchema = z.object({
   rating: z.number().int().min(1).max(5).optional(),
   comment: z.string().max(2000).optional(),
   response: z.string().max(2000).optional()
+})
+
+// Traveler schemas
+export const travelerProfileSchema = z.object({
+  travelerType: z.enum(['EXPAT', 'DIPLOMAT', 'TOURIST', 'LOCAL', 'OTHER']).optional(),
+  homeBase: z.string().max(200).optional(),
+  preferredBudgetRange: z
+    .object({
+      currency: z.string().max(3).optional(),
+      min: z.number().int().nonnegative().optional(),
+      max: z.number().int().nonnegative().optional()
+    })
+    .optional(),
+  preferredActivities: z.array(z.string()).optional(),
+  preferredLanguages: z.array(z.string()).optional(),
+  mobilityNeeds: z.string().max(500).optional(),
+  accessibilityNotes: z.string().max(1000).optional(),
+  aiSetupCompleted: z.boolean().optional(),
+  introSummary: z.string().max(2000).optional(),
+  identityVerified: z.boolean().optional(),
+  verificationDocumentUrl: z.string().url().optional().or(z.literal('')),
+  verificationDocumentType: z
+    .enum(['BUSINESS_LICENSE', 'GOVERNMENT_ID', 'TAX_CERTIFICATE', 'INSURANCE_CERTIFICATE', 'OTHER'])
+    .optional()
+})
+
+export const travelerPreferenceSchema = z.object({
+  budgetMin: z.number().int().nonnegative().optional(),
+  budgetMax: z.number().int().nonnegative().optional(),
+  preferredDistanceKm: z.number().int().nonnegative().optional(),
+  travelPace: z.string().max(200).optional(),
+  dietaryNeeds: z.string().max(500).optional(),
+  riskTolerance: z.string().max(200).optional(),
+  accommodationPreferences: z.string().max(1000).optional(),
+  transportationPreferences: z.string().max(1000).optional(),
+  priorities: z.record(z.any()).optional()
+})
+
+export const tripPlanSchema = z.object({
+  title: z.string().min(1, 'Trip title is required').max(200),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  destinations: z.array(z.record(z.any())).optional(),
+  activities: z.array(z.record(z.any())).optional()
+})
+
+export const tripHealthCheckRequestSchema = z.object({
+  tripPlanId: z.string().min(1, 'Trip plan ID is required'),
+  context: z.record(z.any()).optional()
+})
+
+export const travelerNotificationSchema = z.object({
+  notificationType: z
+    .enum(['OFFER', 'NEW_TRIP', 'SAFETY_ALERT', 'MESSAGE', 'RECOMMENDATION', 'GENERAL'])
+    .optional(),
+  read: z.boolean().optional()
 })
 
 // User validation schemas

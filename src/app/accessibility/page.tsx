@@ -11,7 +11,7 @@ export default function AccessibilityPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                AFRICONNECT
+                Connexus
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -38,7 +38,7 @@ export default function AccessibilityPage() {
             Accessibility <span className="text-yellow-400">Statement</span>
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-            AFRICONNECT is committed to ensuring digital accessibility for all users, including those with disabilities.
+            Connexus is committed to ensuring digital accessibility for all users, including those with disabilities.
           </p>
         </div>
       </section>
@@ -48,7 +48,7 @@ export default function AccessibilityPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-white mb-4">Our Accessibility Features</h2>
-            <p className="text-xl text-gray-300">We strive to make AFRICONNECT accessible to everyone</p>
+            <p className="text-xl text-gray-300">We strive to make Connexus accessible to everyone</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -176,7 +176,7 @@ export default function AccessibilityPage() {
                   <div className="space-y-3">
                     <div>
                       <p className="text-yellow-400 font-medium">Email</p>
-                      <p className="text-gray-300">accessibility@africonnect.com</p>
+                      <p className="text-gray-300">accessibility@connexus.com</p>
                     </div>
                     <div>
                       <p className="text-yellow-400 font-medium">Phone</p>

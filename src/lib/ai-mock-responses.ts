@@ -1,4 +1,4 @@
-// Pre-generated realistic AI responses for all AFRICONNECT features
+// Pre-generated realistic AI responses for all Connexus features
 // These provide fast fallback when OpenAI is unavailable
 
 export const mockResponses = {

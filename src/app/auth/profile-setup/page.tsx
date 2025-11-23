@@ -98,7 +98,7 @@ export default function ProfileSetupPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                AFRICONNECT
+                Connexus
               </Link>
             </div>
             <div className="flex space-x-4">
@@ -113,7 +113,7 @@ export default function ProfileSetupPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-4">Complete Your Profile</h1>
-          <p className="text-xl text-gray-300">Help us personalize your AFRICONNECT experience</p>
+          <p className="text-xl text-gray-300">Help us personalize your Connexus experience</p>
         </div>
 
         <Card className="bg-gray-800 border-yellow-500/30 p-8">
@@ -403,13 +403,13 @@ export default function ProfileSetupPage() {
       <footer className="bg-gradient-to-br from-black via-gray-900 to-black text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <h3 className="text-2xl font-bold">AFRICONNECT</h3>
+            <h3 className="text-2xl font-bold">Connexus</h3>
           </div>
           <p className="text-gray-300 mb-6 max-w-md mx-auto">
             Connecting the world to authentic African experiences through AI-powered technology.
           </p>
           <p className="text-gray-400 text-sm">
-            © 2024 AFRICONNECT. Connecting hearts to Africa's vibrant culture and natural beauty.
+            © 2024 Connexus. Connecting hearts to Africa's vibrant culture and natural beauty.
           </p>
         </div>
       </footer>

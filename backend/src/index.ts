@@ -31,12 +31,12 @@ app.use('/api/ai', aiRouter);
 
 // Test route
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'OK', message: 'AFRICONNECT backend is running.' });
+  res.json({ status: 'OK', message: 'Connexus backend is running.' });
 });
 
 // Error handler
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`AFRICONNECT backend listening on port ${PORT}`);
+  console.log(`Connexus backend listening on port ${PORT}`);
 });

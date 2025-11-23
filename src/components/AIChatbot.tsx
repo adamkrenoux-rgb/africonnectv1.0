@@ -23,7 +23,7 @@ export default function AIChatbot({ className = '' }: AIChatbotProps) {
     {
       id: '1',
       type: 'ai',
-      content: "Hi! I'm your AFRICONNECT AI assistant. How can I help you plan your African adventure today?",
+      content: "Hi! I'm your Connexus AI assistant. How can I help you plan your African adventure today?",
       timestamp: new Date()
     }
   ])

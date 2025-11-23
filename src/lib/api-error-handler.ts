@@ -2,6 +2,7 @@
  * Centralized API error handling with Sentry integration
  */
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { captureException } from './sentry'
 
 interface ApiError extends Error {
@@ -73,9 +74,9 @@ export function handleApiError(error: unknown, context?: Record<string, any>): N
 }
 
 export function apiErrorHandler(
-  handler: (request: Request, context?: any) => Promise<NextResponse>
+  handler: (request: Request | NextRequest, context?: any) => Promise<NextResponse>
 ) {
-  return async (request: Request, context?: any): Promise<NextResponse> => {
+  return async (request: Request | NextRequest, context?: any): Promise<NextResponse> => {
     try {
       return await handler(request, context)
     } catch (error) {

@@ -1,17 +1,83 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
 export default function OnboardingPage() {
+  const { isLoaded, isSignedIn, user } = useUser()
   const [selectedRole, setSelectedRole] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const handleRoleSelection = async (role: string) => {
+  // Redirect to sign-up if not authenticated
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      console.log('[Onboarding] User not signed in, redirecting to sign-up')
+      router.push('/sign-up?redirect_url=/onboarding')
+    } else if (isLoaded && isSignedIn) {
+      console.log('[Onboarding] User signed in:', user?.id, 'Email:', user?.emailAddresses?.[0]?.emailAddress)
+    }
+  }, [isLoaded, isSignedIn, router, user])
+
+  // Show loading while checking authentication
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show sign-up prompt if not authenticated
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <h1 className="text-3xl font-bold text-yellow-600 mb-4">🌍 Welcome to Connexus</h1>
+          <p className="text-gray-600 mb-6">
+            Please sign up to continue
+          </p>
+          <Button
+            onClick={() => router.push('/sign-up?redirect_url=/onboarding')}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-3 text-lg"
+          >
+            Go to Sign Up
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  const roleLabels: Record<string, string> = {
+    TRAVELER: 'Traveler',
+    BUSINESS: 'Business',
+    INFLUENCER: 'Influencer',
+    ADMIN: 'Admin'
+  }
+
+  const getNextPath = (role: string) => {
+    switch (role) {
+      case 'BUSINESS':
+        return '/businesses/dashboard'
+      case 'INFLUENCER':
+        return '/influencers/dashboard'
+      case 'TRAVELER':
+      default:
+        return '/travelers/dashboard'
+    }
+  }
+
+  const handleRoleSelection = async (role: string | null) => {
+    if (!role) return
     setIsLoading(true)
+    setError(null)
     try {
       const response = await fetch('/api/users', {
         method: 'PUT',
@@ -21,13 +87,38 @@ export default function OnboardingPage() {
         body: JSON.stringify({ role }),
       })
 
-      if (response.ok) {
-        router.push('/dashboard')
+      // Check content type before parsing JSON
+      const contentType = response.headers.get('content-type')
+      let data: any = null
+      
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          data = await response.json()
+        } catch (jsonError) {
+          console.error('Error parsing JSON response:', jsonError)
+          setError('Received an invalid response from the server. Please try again.')
+          return
+        }
       } else {
-        console.error('Failed to update user role')
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        setError('Server error. Please check your database connection and try again.')
+        return
       }
-    } catch (error) {
+
+      if (!response.ok || !data?.success) {
+        const message =
+          data?.error ||
+          `Unable to update your role. Please try again or contact support.`
+        setError(message)
+        return
+      }
+
+      router.push(getNextPath(role))
+    } catch (error: any) {
       console.error('Error updating user role:', error)
+      const message = error.message || 'Something went wrong while setting up your account. Please try again.'
+      setError(message)
     } finally {
       setIsLoading(false)
     }
@@ -37,7 +128,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50">
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-yellow-600 mb-4">🌍 Welcome to AFRICONNECT</h1>
+          <h1 className="text-4xl font-bold text-yellow-600 mb-4">🌍 Welcome to Connexus</h1>
           <p className="text-xl text-gray-600">
             Choose your role to get started with authentic African travel experiences
           </p>
@@ -118,8 +209,13 @@ export default function OnboardingPage() {
               disabled={isLoading}
               className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-3 text-lg"
             >
-              {isLoading ? 'Setting up...' : `Continue as ${selectedRole}`}
+              {isLoading ? 'Setting up...' : `Continue as ${roleLabels[selectedRole] ?? selectedRole}`}
             </Button>
+            {error && (
+              <p className="mt-4 text-sm text-red-600">
+                {error}
+              </p>
+            )}
           </div>
         )}
       </div>

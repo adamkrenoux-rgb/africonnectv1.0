@@ -62,7 +62,7 @@ export default function BlogPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                AFRICONNECT
+                Connexus
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -86,7 +86,7 @@ export default function BlogPage() {
       <section className="py-20 bg-gradient-to-br from-yellow-600/20 via-orange-500/30 to-red-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            AFRICONNECT <span className="text-yellow-400">Blog</span>
+            Connexus <span className="text-yellow-400">Blog</span>
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
             Insights, tips, and stories about authentic African travel, sustainable tourism, and the future of travel technology.

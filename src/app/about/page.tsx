@@ -11,7 +11,7 @@ export default function AboutPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                AFRICONNECT
+                Connexus
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -35,7 +35,7 @@ export default function AboutPage() {
       <section className="py-20 bg-gradient-to-br from-yellow-600/20 via-orange-500/30 to-red-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            About <span className="text-yellow-400">AFRICONNECT</span>
+            About <span className="text-yellow-400">Connexus</span>
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
             We're revolutionizing African tourism by connecting travelers to authentic local experiences through AI-powered discovery and verified partnerships.
@@ -125,7 +125,7 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-white text-center mb-12">Our Story</h2>
             <div className="prose prose-lg prose-invert max-w-none">
               <p className="text-gray-300 leading-relaxed mb-6">
-                AFRICONNECT was born from a simple observation: while Africa offers some of the world's most incredible travel experiences, many authentic local businesses struggle to reach international travelers, and travelers often miss out on genuine cultural experiences.
+                Connexus was born from a simple observation: while Africa offers some of the world's most incredible travel experiences, many authentic local businesses struggle to reach international travelers, and travelers often miss out on genuine cultural experiences.
               </p>
               <p className="text-gray-300 leading-relaxed mb-6">
                 Founded by a team of travel enthusiasts, technology experts, and African tourism advocates, we recognized the need for a platform that could bridge this gap using intelligent technology while preserving the authenticity that makes African travel so special.
@@ -134,7 +134,7 @@ export default function AboutPage() {
                 Our AI-powered platform doesn't just connect travelers with businesses—it understands preferences, suggests perfect matches, and ensures every interaction supports local communities and preserves cultural heritage.
               </p>
               <p className="text-gray-300 leading-relaxed">
-                Today, AFRICONNECT is proud to support hundreds of verified African tourism businesses while helping thousands of travelers discover the authentic Africa they've always dreamed of experiencing.
+                Today, Connexus is proud to support hundreds of verified African tourism businesses while helping thousands of travelers discover the authentic Africa they've always dreamed of experiencing.
               </p>
             </div>
           </div>

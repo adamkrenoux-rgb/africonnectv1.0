@@ -73,9 +73,24 @@ export function useCurrentUser() {
     
     try {
       const response = await fetch('/api/users/me')
+      
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        console.warn('Non-JSON response from /api/users/me:', contentType)
+        setIsLoading(false)
+        return
+      }
+      
       if (response.ok) {
-        const data = await response.json()
-        setDbUser(data.user)
+        try {
+          const data = await response.json()
+          if (data.success && data.user) {
+            setDbUser(data.user)
+          }
+        } catch (jsonError) {
+          console.error('Error parsing JSON response:', jsonError)
+        }
       }
     } catch (error) {
       console.error('Error fetching user data:', error)

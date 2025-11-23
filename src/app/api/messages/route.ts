@@ -5,7 +5,8 @@ import { z } from 'zod'
 
 const createMessageSchema = z.object({
   receiverId: z.string().min(1),
-  content: z.string().min(1).max(5000)
+  content: z.string().min(1).max(5000),
+  language: z.string().max(10).optional()
 })
 
 // GET /api/messages - Get conversations for current user
@@ -59,7 +60,8 @@ export async function GET(request: NextRequest) {
               profilePicture: true,
               role: true
             }
-          }
+          },
+          translations: true
         },
         orderBy: {
           createdAt: 'asc'
@@ -188,7 +190,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { receiverId, content } = validation.data
+    const { receiverId, content, language } = validation.data
 
     // Verify receiver exists
     const receiver = await prisma.user.findUnique({
@@ -207,7 +209,8 @@ export async function POST(request: NextRequest) {
       data: {
         senderId: dbUser.id,
         receiverId,
-        content: content.trim()
+        content: content.trim(),
+        language: language || dbUser.primaryLanguage || null
       },
       include: {
         sender: {
@@ -225,7 +228,8 @@ export async function POST(request: NextRequest) {
             profilePicture: true,
             role: true
           }
-        }
+        },
+        translations: true
       }
     })
 

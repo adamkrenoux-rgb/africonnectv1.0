@@ -13,7 +13,7 @@ export default function Home() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-                AFRICONNECT
+                Connexus
               </h1>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -26,7 +26,7 @@ export default function Home() {
                   <Button variant="outline" className="border-yellow-500 text-yellow-700 hover:bg-yellow-50">Sign In</Button>
                 </Link>
                 <Link href="/sign-up">
-                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Get Started</Button>
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">Sign Up</Button>
                 </Link>
               </div>
           </div>
@@ -79,7 +79,7 @@ export default function Home() {
               Three Powerful Forces in Travel
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Discover how AFRICONNECT transforms African tourism through technology, trust, and authentic connections.
+              Discover how Connexus transforms African tourism through technology, trust, and authentic connections.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -134,7 +134,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">
-              About AFRICONNECT
+              About Connexus
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               We're on a mission to transform African tourism by connecting authentic local experiences with the international community.
@@ -144,7 +144,7 @@ export default function Home() {
             <div>
               <h3 className="text-2xl font-bold text-white mb-6">Our Story</h3>
               <p className="text-gray-300 leading-relaxed mb-6">
-                AFRICONNECT was born from a simple observation: small, local African tourism businesses had incredible experiences to offer but virtually no access to the international market. We saw talented safari guides, cultural experts, and adventure operators struggling to reach potential customers beyond their immediate communities.
+                Connexus was born from a simple observation: small, local African tourism businesses had incredible experiences to offer but virtually no access to the international market. We saw talented safari guides, cultural experts, and adventure operators struggling to reach potential customers beyond their immediate communities.
               </p>
               <p className="text-gray-300 leading-relaxed mb-6">
                 Meanwhile, travelers were seeking authentic African experiences but had no reliable way to connect with verified local businesses. We realized that technology could bridge this gap, creating a platform that empowers local businesses while providing travelers with access to truly authentic experiences.
@@ -341,7 +341,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">
-              Why Choose AFRICONNECT?
+              Why Choose Connexus?
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               We combine cutting-edge technology with deep respect for African culture and communities.

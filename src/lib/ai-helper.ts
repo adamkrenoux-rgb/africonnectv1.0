@@ -15,12 +15,35 @@ interface AIRequest {
 }
 
 class AIHelper {
-  private openaiApiKey: string | null = null
-  private isOpenAIAvailable: boolean = false
+  /**
+   * Get OpenAI API key dynamically (checks on each call)
+   * This ensures we pick up env var changes without restarting
+   */
+  private getOpenAIApiKey(): string | null {
+    const key = process.env.OPENAI_API_KEY || null
+    
+    // Validate the key is not a placeholder
+    if (!key) {
+      return null
+    }
+    
+    if (
+      key === 'your_openai_api_key' ||
+      key.startsWith('your_') ||
+      key.length < 20 ||
+      !key.startsWith('sk-')
+    ) {
+      return null
+    }
+    
+    return key
+  }
 
-  constructor() {
-    this.openaiApiKey = process.env.OPENAI_API_KEY || null
-    this.isOpenAIAvailable = !!this.openaiApiKey
+  /**
+   * Check if OpenAI is available
+   */
+  private isOpenAIAvailable(): boolean {
+    return !!this.getOpenAIApiKey()
   }
 
   /**
@@ -28,13 +51,17 @@ class AIHelper {
    */
   async generateResponse(request: AIRequest): Promise<AIResponse> {
     try {
-      if (this.isOpenAIAvailable) {
-        return await this.callOpenAI(request)
+      const apiKey = this.getOpenAIApiKey()
+      if (apiKey) {
+        console.log('[AI Helper] OpenAI API key found, attempting API call')
+        return await this.callOpenAI(request, apiKey)
       } else {
+        console.warn('[AI Helper] OpenAI API key not found or invalid, using mock response')
+        console.warn('[AI Helper] Check that OPENAI_API_KEY is set in .env.local and starts with "sk-"')
         return await this.getMockResponse(request)
       }
     } catch (error) {
-      console.error('AI Helper Error:', error)
+      console.error('[AI Helper] Error:', error)
       // Fallback to mock response on any error
       return await this.getMockResponse(request)
     }
@@ -43,20 +70,24 @@ class AIHelper {
   /**
    * Call OpenAI API
    */
-  private async callOpenAI(request: AIRequest): Promise<AIResponse> {
+  private async callOpenAI(request: AIRequest, apiKey: string): Promise<AIResponse> {
     try {
+      const model = request.model || 'gpt-4o-mini'
+      console.log(`[AI Helper] Calling OpenAI API with model: ${model}`)
+      console.log(`[AI Helper] API key length: ${apiKey.length}, starts with: ${apiKey.substring(0, 7)}...`)
+      
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.openaiApiKey}`,
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: request.model || 'gpt-3.5-turbo',
+          model: request.model || 'gpt-4o-mini',
           messages: [
             {
               role: 'system',
-              content: 'You are an AI assistant for AFRICONNECT, a platform connecting travelers to authentic African experiences. Provide helpful, accurate, and culturally sensitive responses.'
+              content: 'You are an AI assistant for Connexus, a platform connecting travelers to authentic African experiences. Provide helpful, accurate, and culturally sensitive responses.'
             },
             {
               role: 'user',
@@ -69,22 +100,40 @@ class AIHelper {
       })
 
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`)
+        const errorText = await response.text()
+        let errorData: any = {}
+        try {
+          errorData = JSON.parse(errorText)
+        } catch (e) {
+          // Not JSON, use raw text
+        }
+        
+        console.error(`[AI Helper] OpenAI API error (${response.status}):`, errorText.substring(0, 500))
+        
+        // Check for quota/billing errors
+        if (errorData?.error?.code === 'insufficient_quota' || errorText.includes('quota')) {
+          console.error('[AI Helper] OpenAI API quota exceeded! Please add credits to your OpenAI account.')
+          throw new Error('OpenAI API quota exceeded. Please add credits to your OpenAI account at https://platform.openai.com/account/billing')
+        }
+        
+        throw new Error(`OpenAI API error: ${response.status} - ${errorData?.error?.message || errorText.substring(0, 200)}`)
       }
 
       const data = await response.json()
       const tokensUsed = data.usage?.total_tokens || 0
       const cost = this.calculateCost(tokensUsed)
+      const content = data.choices[0]?.message?.content || ''
 
+      console.log(`[AI Helper] OpenAI API success! Tokens used: ${tokensUsed}, Content length: ${content.length}`)
       return {
         success: true,
-        data: data.choices[0]?.message?.content || '',
+        data: content,
         source: 'openai',
         tokensUsed,
         cost
       }
-    } catch (error) {
-      console.error('OpenAI API Error:', error)
+    } catch (error: any) {
+      console.error('[AI Helper] OpenAI API Error:', error?.message || error)
       // Fallback to mock response
       return await this.getMockResponse(request)
     }
@@ -135,7 +184,7 @@ class AIHelper {
     }
 
     // Default response
-    return `I'd be happy to help you with your AFRICONNECT experience! Whether you're planning a trip, listing your business, or creating a campaign, I can provide personalized recommendations. Could you tell me more about what you're looking for?`
+    return `I'd be happy to help you with your Connexus experience! Whether you're planning a trip, listing your business, or creating a campaign, I can provide personalized recommendations. Could you tell me more about what you're looking for?`
   }
 
   /**
@@ -150,16 +199,17 @@ class AIHelper {
    * Check if OpenAI is available
    */
   isOpenAIReady(): boolean {
-    return this.isOpenAIAvailable
+    return this.isOpenAIAvailable()
   }
 
   /**
    * Get usage statistics
    */
   getUsageStats(): { openaiAvailable: boolean; apiKeyConfigured: boolean } {
+    const hasKey = !!this.getOpenAIApiKey()
     return {
-      openaiAvailable: this.isOpenAIAvailable,
-      apiKeyConfigured: !!this.openaiApiKey
+      openaiAvailable: hasKey,
+      apiKeyConfigured: hasKey
     }
   }
 }
