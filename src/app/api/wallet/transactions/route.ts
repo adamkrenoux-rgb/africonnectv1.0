@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { handleApiError } from '@/lib/api-error-handler'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const paginationSchema = z.object({
   page: z.string().optional(),
   pageSize: z.string().optional()

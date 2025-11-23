@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { generateHashtags } from '@/lib/ai/influencer-hashtags'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   platform: z.enum(['instagram', 'tiktok', 'youtube', 'facebook', 'twitter']).optional(),
   topic: z.string().optional(),

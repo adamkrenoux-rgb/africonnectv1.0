@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAndIncrementRateLimit, verifyApiKey } from '@/lib/api-keys'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const key = request.headers.get('x-afri-api-key') || request.headers.get('X-Afri-Api-Key')

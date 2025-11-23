@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { validateRequest, createPromotionSchema } from '@/lib/validation'
 import { getUserEntitlements, hasEntitlement } from '@/lib/entitlements'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/promotions - list my promotions
 export async function GET(request: NextRequest) {
   try {

@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
 import { validateRequest, updatePromotionSchema } from '@/lib/validation'
 
+export const dynamic = 'force-dynamic'
+
 // PATCH /api/promotions/[id] - update status/budget/boost/timing
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {

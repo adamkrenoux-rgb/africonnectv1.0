@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { getLeadInsights } from '@/lib/ai/business-crm'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   leadName: z.string().optional(),
   source: z.string().optional(),

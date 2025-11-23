@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { generateSEO } from '@/lib/ai/influencer-seo'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),

@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
 import { influencerPortfolioUpsertSchema, validateRequest } from '@/lib/validation'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/influencers/portfolio
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser()

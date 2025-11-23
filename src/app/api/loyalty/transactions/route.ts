@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const paginationSchema = z.object({
   page: z.string().optional(),
   pageSize: z.string().optional()

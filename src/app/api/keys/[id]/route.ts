@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const updateSchema = z.object({
   action: z.enum(['revoke'])
 })

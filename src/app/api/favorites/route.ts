@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { validateRequest, createFavoriteSchema, deleteFavoriteSchema } from '@/lib/validation'
 import { handleApiError } from '@/lib/api-error-handler'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/favorites - list current user's favorites
 export async function GET(request: NextRequest) {
   try {

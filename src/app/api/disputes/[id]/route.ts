@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { handleApiError } from '@/lib/api-error-handler'
 import { validateRequest, updateDisputeStatusSchema, addDisputeMessageSchema } from '@/lib/validation'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/disputes/[id]
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {

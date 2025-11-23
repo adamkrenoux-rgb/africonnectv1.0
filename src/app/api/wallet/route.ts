@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
 import { handleApiError } from '@/lib/api-error-handler'
 
+export const dynamic = 'force-dynamic'
+
 // Ensure a WalletAccount exists for the current user
 async function ensureWalletAccount(userId: string) {
   const existing = await prisma.walletAccount.findUnique({ where: { userId } })

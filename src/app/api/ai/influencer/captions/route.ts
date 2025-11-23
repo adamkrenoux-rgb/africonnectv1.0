@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { generateCaptions } from '@/lib/ai/influencer-captions'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   platform: z.enum(['instagram', 'tiktok', 'youtube', 'facebook', 'twitter']).optional(),
   theme: z.string().optional(),

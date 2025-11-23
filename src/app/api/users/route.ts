@@ -4,6 +4,8 @@ import { UserRole } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/users - Get all users or filter by role
 export async function GET(request: NextRequest) {
   try {

@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { recommendPostingTimes } from '@/lib/ai/influencer-posting'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   platform: z.enum(['instagram', 'tiktok', 'youtube', 'facebook', 'twitter']).optional(),
   audienceLocale: z.string().optional(),

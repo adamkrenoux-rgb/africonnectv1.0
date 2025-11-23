@@ -5,6 +5,8 @@ import { getUserEntitlements, hasEntitlement } from '@/lib/entitlements'
 import { generateApiKey } from '@/lib/api-keys'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/keys - list my API keys (metadata only)
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser()

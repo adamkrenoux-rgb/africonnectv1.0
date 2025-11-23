@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { getDemandForecast } from '@/lib/ai/business-demand'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   region: z.string().optional(),
   activityType: z.string().optional(),

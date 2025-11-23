@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth-helpers'
 import { generatePitch } from '@/lib/ai/influencer-pitch'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   brandName: z.string().optional(),
   deliverables: z.array(z.string()).optional(),

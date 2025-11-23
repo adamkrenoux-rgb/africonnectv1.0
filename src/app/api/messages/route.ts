@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { currentUser } from '@clerk/nextjs/server'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const createMessageSchema = z.object({
   receiverId: z.string().min(1),
   content: z.string().min(1).max(5000),

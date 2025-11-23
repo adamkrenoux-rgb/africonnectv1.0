@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
 
+export const dynamic = 'force-dynamic'
+
 async function ensureAccount(userId: string) {
   const existing = await prisma.loyaltyAccount.findUnique({ where: { userId } })
   if (existing) return existing

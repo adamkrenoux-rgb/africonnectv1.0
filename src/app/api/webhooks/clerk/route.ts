@@ -4,6 +4,8 @@ import { headers } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { UserRole } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET
 
 // Clerk webhook handler to sync users to database

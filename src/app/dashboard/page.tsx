@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 
 import { getCurrentUser } from '@/lib/auth-helpers'
 
+export const dynamic = 'force-dynamic'
+
 const ROLE_REDIRECTS: Record<string, string> = {
   TRAVELER: '/travelers/dashboard',
   BUSINESS: '/businesses/dashboard',
