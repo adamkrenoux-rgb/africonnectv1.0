@@ -10,7 +10,7 @@ export default function PrivacyPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -152,8 +152,8 @@ export default function PrivacyPage() {
               If you have any questions about this Privacy Policy or our data practices, please contact us:
             </p>
             <div className="bg-gray-800 p-6 rounded-lg">
-              <p className="text-gray-300 mb-2">Email: privacy@connexus.com</p>
-              <p className="text-gray-300 mb-2">Data Protection Officer: dpo@connexus.com</p>
+              <p className="text-gray-300 mb-2">Email: privacy@africonnect.com</p>
+              <p className="text-gray-300 mb-2">Data Protection Officer: dpo@africonnect.com</p>
               <p className="text-gray-300 mb-2">Address: [Company Address]</p>
               <p className="text-gray-300">Phone: [Contact Number]</p>
             </div>

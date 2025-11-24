@@ -87,7 +87,7 @@ class AIHelper {
           messages: [
             {
               role: 'system',
-              content: 'You are an AI assistant for Connexus, a platform connecting travelers to authentic African experiences. Provide helpful, accurate, and culturally sensitive responses.'
+              content: 'You are an AI assistant for Africonnect, a platform connecting travelers to authentic African experiences. Provide helpful, accurate, and culturally sensitive responses.'
             },
             {
               role: 'user',
@@ -184,7 +184,7 @@ class AIHelper {
     }
 
     // Default response
-    return `I'd be happy to help you with your Connexus experience! Whether you're planning a trip, listing your business, or creating a campaign, I can provide personalized recommendations. Could you tell me more about what you're looking for?`
+    return `I'd be happy to help you with your Africonnect experience! Whether you're planning a trip, listing your business, or creating a campaign, I can provide personalized recommendations. Could you tell me more about what you're looking for?`
   }
 
   /**

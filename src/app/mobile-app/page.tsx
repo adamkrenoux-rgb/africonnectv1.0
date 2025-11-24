@@ -6,7 +6,7 @@ export default function MobileAppPage() {
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-africa-earth mb-6">📱 Mobile App Coming Soon</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Take Connexus with you wherever you go. Our mobile app will bring authentic African travel experiences to your fingertips.
+            Take Africonnect with you wherever you go. Our mobile app will bring authentic African travel experiences to your fingertips.
           </p>
         </div>
 

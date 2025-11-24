@@ -1,4 +1,4 @@
-# Connexus - Deployment Guide
+# Africonnect - Deployment Guide
 
 ## 🚀 **Current Status: MVP Ready for Demo**
 

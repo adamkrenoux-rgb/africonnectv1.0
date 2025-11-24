@@ -14,7 +14,7 @@
 ## Step 2: Configure Project Settings
 
 ### Project Name
-- Name: `connexus` (or your preferred name)
+- Name: `africonnect` (or your preferred name)
 
 ### Framework Preset
 - Framework Preset: **Next.js** (should auto-detect)
@@ -58,7 +58,7 @@ Add the following environment variables in Vercel:
 
 ### Optional Environment Variables
 
-- `NEXT_PUBLIC_APP_URL` - Your production URL (e.g., `https://connexus.vercel.app`)
+- `NEXT_PUBLIC_APP_URL` - Your production URL (e.g., `https://africonnect.vercel.app`)
 - `NODE_ENV=production`
 
 ## Step 4: Add Environment Variables in Vercel

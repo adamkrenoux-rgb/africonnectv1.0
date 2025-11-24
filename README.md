@@ -1,6 +1,6 @@
-# 🌍 Connexus - AI-Powered African Travel Platform
+# 🌍 Africonnect - AI-Powered African Travel Platform
 
-Connexus is an AI-powered platform connecting the international community (UN employees, diplomats, NGO staff, and expats) to authentic local tourism businesses across Africa, while also bridging these businesses with travel influencers for strategic collaborations.
+Africonnect is an AI-powered platform connecting the international community (UN employees, diplomats, NGO staff, and expats) to authentic local tourism businesses across Africa, while also bridging these businesses with travel influencers for strategic collaborations.
 
 ## 🎯 Mission
 
@@ -8,7 +8,7 @@ To make authentic African travel more accessible and profitable by empowering ve
 
 ## 🧩 Platform Structure
 
-Connexus operates as two integrated marketplaces powered by AI:
+Africonnect operates as two integrated marketplaces powered by AI:
 
 ### 1. 🌐 Traveler ↔ Local Business Marketplace
 - **AI-Powered Trip Discovery**: Generate personalized itineraries based on preferences
@@ -302,4 +302,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Connexus** - Connecting the world to authentic African experiences through AI-powered technology. 🌍✨
+**Africonnect** - Connecting the world to authentic African experiences through AI-powered technology. 🌍✨

@@ -55,7 +55,7 @@ function SignInContent() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black">
       <div className="max-w-md w-full space-y-8 p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-yellow-400 mb-2">🌍 Connexus</h1>
+          <h1 className="text-3xl font-bold text-yellow-400 mb-2">🌍 Africonnect</h1>
           <p className="text-gray-300">Sign in to your account</p>
         </div>
         <SignIn
@@ -95,7 +95,7 @@ export default function Page() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
         <div className="max-w-md w-full space-y-6 p-8 rounded-2xl border border-yellow-500/40 bg-gray-900/90 shadow-2xl text-center">
-          <h1 className="text-3xl font-bold text-yellow-400 mb-2">🌍 Connexus</h1>
+          <h1 className="text-3xl font-bold text-yellow-400 mb-2">🌍 Africonnect</h1>
           <p className="text-gray-200">
             Authentication is currently disabled. Set your Clerk API keys to enable sign-in.
           </p>

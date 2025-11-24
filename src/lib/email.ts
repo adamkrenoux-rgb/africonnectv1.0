@@ -17,7 +17,7 @@ interface EmailResult {
 }
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY
-const FROM_EMAIL = process.env.FROM_EMAIL || 'Connexus <noreply@connexus.com>'
+const FROM_EMAIL = process.env.FROM_EMAIL || 'Africonnect <noreply@africonnect.com>'
 const USE_MOCK = !RESEND_API_KEY
 
 /**
@@ -105,7 +105,7 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🌍 Connexus</h1>
+              <h1>🌍 Africonnect</h1>
               <p>Booking Confirmation</p>
             </div>
             <div class="content">
@@ -123,11 +123,11 @@ export const emailTemplates = {
 
               <p>Your payment has been securely held in escrow and will be released to the business after your experience is completed.</p>
               
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://connexus.com'}/bookings/${booking.id}" class="button">View Booking Details</a>
+              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://africonnect.com'}/bookings/${booking.id}" class="button">View Booking Details</a>
               
               <div class="footer">
-                <p>Need help? Contact us at support@connexus.com</p>
-                <p>&copy; 2024 Connexus. All rights reserved.</p>
+                <p>Need help? Contact us at support@africonnect.com</p>
+                <p>&copy; 2024 Africonnect. All rights reserved.</p>
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎥 Connexus</h1>
+              <h1>🎥 Africonnect</h1>
               <p>New Campaign Application</p>
             </div>
             <div class="content">
@@ -177,8 +177,8 @@ export const emailTemplates = {
               <p>Review the application and respond through your dashboard.</p>
               
               <div class="footer">
-                <p>Need help? Contact us at support@connexus.com</p>
-                <p>&copy; 2024 Connexus. All rights reserved.</p>
+                <p>Need help? Contact us at support@africonnect.com</p>
+                <p>&copy; 2024 Africonnect. All rights reserved.</p>
               </div>
             </div>
           </div>
@@ -209,7 +209,7 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>✅ Connexus</h1>
+              <h1>✅ Africonnect</h1>
               <p>Verification ${verification.status}</p>
             </div>
             <div class="content">
@@ -232,8 +232,8 @@ export const emailTemplates = {
               `}
               
               <div class="footer">
-                <p>Need help? Contact us at support@connexus.com</p>
-                <p>&copy; 2024 Connexus. All rights reserved.</p>
+                <p>Need help? Contact us at support@africonnect.com</p>
+                <p>&copy; 2024 Africonnect. All rights reserved.</p>
               </div>
             </div>
           </div>

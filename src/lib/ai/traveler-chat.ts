@@ -34,7 +34,7 @@ export async function generateTravelerChatResponse(
     .join('\n')
   
   const promptParts = [
-    'You are Connexus\'s travel concierge, an expert on African travel.',
+    'You are Africonnect\'s travel concierge, an expert on African travel.',
     'Your role is to provide accurate, helpful, and culturally sensitive travel advice for Africa.',
     'IMPORTANT: Only provide information you are confident about. If you are unsure, say so.',
     'IMPORTANT: Focus on practical, actionable advice. Include specific details like pricing ranges, best times to visit, and booking tips.',
@@ -88,7 +88,7 @@ export async function generateTravelerChatResponse(
       suggestions = ['Check country-specific travel advisories', 'Review health and vaccination requirements', 'Connect with verified local guides']
       topics = ['safety', 'travel advisories']
     } else if (lowerMessage.includes('budget') || lowerMessage.includes('price') || lowerMessage.includes('cost')) {
-      reply = 'Budget planning is key! Experiences on Connexus range from budget-friendly community tours ($50-150) to premium safari packages ($2000+). I can help you find options that match your budget while maximizing value. Would you like recommendations for a specific price range?'
+      reply = 'Budget planning is key! Experiences on Africonnect range from budget-friendly community tours ($50-150) to premium safari packages ($2000+). I can help you find options that match your budget while maximizing value. Would you like recommendations for a specific price range?'
       suggestions = ['Explore budget-friendly experiences', 'Compare mid-range options', 'View premium packages']
       topics = ['budget', 'pricing']
     } else if (lowerMessage.includes('culture') || lowerMessage.includes('local') || lowerMessage.includes('authentic')) {
@@ -194,7 +194,7 @@ export async function generateTravelerChatResponse(
     suggestions = ['Check country-specific travel advisories', 'Review health and vaccination requirements', 'Connect with verified local guides']
     topics = ['safety', 'travel advisories']
   } else if ((conversationText.includes('budget') || conversationText.includes('price') || conversationText.includes('cost')) && (topicCounts['budget'] || 0) < 2) {
-    reply = 'Budget planning is key! Experiences on Connexus range from budget-friendly community tours ($50-150) to premium safari packages ($2000+). I can help you find options that match your budget while maximizing value. Would you like recommendations for a specific price range?'
+    reply = 'Budget planning is key! Experiences on Africonnect range from budget-friendly community tours ($50-150) to premium safari packages ($2000+). I can help you find options that match your budget while maximizing value. Would you like recommendations for a specific price range?'
     suggestions = ['Explore budget-friendly experiences', 'Compare mid-range options', 'View premium packages']
     topics = ['budget', 'pricing']
   } else if ((conversationText.includes('culture') || conversationText.includes('local') || conversationText.includes('authentic')) && (topicCounts['culture'] || 0) < 2) {

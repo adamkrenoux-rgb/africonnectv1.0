@@ -11,11 +11,11 @@ export default function FAQPage() {
   const faqData = {
     travelers: [
       {
-        question: "How do I book an experience on Connexus?",
+        question: "How do I book an experience on Africonnect?",
         answer: "Simply browse our verified experiences, select your preferred dates and options, and complete the booking through our secure payment system. You'll receive instant confirmation and all the details you need for your experience."
       },
       {
-        question: "Are all businesses on Connexus verified?",
+        question: "Are all businesses on Africonnect verified?",
         answer: "Yes! Every business on our platform goes through a comprehensive verification process including document verification, background checks, and quality assessments. Look for the verified badge on all listings."
       },
       {
@@ -33,11 +33,11 @@ export default function FAQPage() {
     ],
     businesses: [
       {
-        question: "How do I get my business verified on Connexus?",
+        question: "How do I get my business verified on Africonnect?",
         answer: "Submit your business information, upload required documents (business license, insurance, etc.), and our team will review your application. The process typically takes 2-5 business days, and you'll be notified of the status."
       },
       {
-        question: "What commission does Connexus take?",
+        question: "What commission does Africonnect take?",
         answer: "We charge a 15% commission on bookings and 12% on influencer collaborations. This includes payment processing, platform maintenance, customer support, and marketing to help grow your business."
       },
       {
@@ -45,7 +45,7 @@ export default function FAQPage() {
         answer: "Use our AI listing optimizer to improve your titles, descriptions, and pricing. Add high-quality photos, respond to reviews quickly, and keep your availability updated. Our AI will also suggest improvements based on successful listings."
       },
       {
-        question: "Can I work with influencers through Connexus?",
+        question: "Can I work with influencers through Africonnect?",
         answer: "Yes! Create campaigns to collaborate with travel influencers. Set your budget, deliverables, and target audience, then review applications from interested influencers. Our AI helps match you with the best partners."
       },
       {
@@ -55,7 +55,7 @@ export default function FAQPage() {
     ],
     influencers: [
       {
-        question: "How do I create a campaign on Connexus?",
+        question: "How do I create a campaign on Africonnect?",
         answer: "Sign up as an influencer, complete your profile with your social media stats and content examples, then create campaigns specifying your deliverables, target audience, and collaboration terms. Businesses will apply to work with you."
       },
       {
@@ -77,7 +77,7 @@ export default function FAQPage() {
     ],
     general: [
       {
-        question: "Is Connexus available in multiple languages?",
+        question: "Is Africonnect available in multiple languages?",
         answer: "Yes! We support English, French, Portuguese, and Swahili. Our AI chatbot and platform interface automatically detect your language preferences and respond accordingly."
       },
       {
@@ -85,7 +85,7 @@ export default function FAQPage() {
         answer: "You can reach our support team through the chat widget on any page, email us at support@connexus.com, or use the contact form. We typically respond within 24 hours."
       },
       {
-        question: "What makes Connexus different from other travel platforms?",
+        question: "What makes Africonnect different from other travel platforms?",
         answer: "We focus exclusively on authentic African experiences, use AI to personalize recommendations, verify all businesses, and facilitate meaningful connections between travelers and local communities. Our platform is built specifically for African tourism."
       },
       {
@@ -93,7 +93,7 @@ export default function FAQPage() {
         answer: "We partner with leading travel insurance providers to offer comprehensive coverage for your African adventures. You can add insurance during the booking process or contact us for more information."
       },
       {
-        question: "How does Connexus support local communities?",
+        question: "How does Africonnect support local communities?",
         answer: "Every booking directly supports local businesses and communities. We also provide business development resources, marketing support, and help businesses grow sustainably while preserving cultural heritage."
       }
     ]
@@ -111,7 +111,7 @@ export default function FAQPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -138,7 +138,7 @@ export default function FAQPage() {
             Frequently Asked <span className="text-yellow-400">Questions</span>
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-            Find answers to common questions about using Connexus for travel, business, and influencer collaborations.
+            Find answers to common questions about using Africonnect for travel, business, and influencer collaborations.
           </p>
         </div>
       </section>
@@ -246,7 +246,7 @@ export default function FAQPage() {
       <section className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Still Have Questions?</h2>
-          <p className="text-xl text-gray-300 mb-8">Our support team is here to help you get the most out of Connexus</p>
+          <p className="text-xl text-gray-300 mb-8">Our support team is here to help you get the most out of Africonnect</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/contact">
               <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 text-lg">

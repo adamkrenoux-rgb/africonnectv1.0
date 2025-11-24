@@ -68,7 +68,7 @@ export default function HelpPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -95,7 +95,7 @@ export default function HelpPage() {
             Help <span className="text-yellow-400">Center</span>
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-            Find answers to common questions and get support for your Connexus experience
+            Find answers to common questions and get support for your Africonnect experience
           </p>
         </div>
       </section>

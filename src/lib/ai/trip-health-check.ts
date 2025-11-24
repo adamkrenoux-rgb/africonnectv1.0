@@ -40,7 +40,7 @@ export async function runTripHealthCheck({
   context
 }: TripHealthCheckInput): Promise<TripHealthCheckResult> {
   const prompt = [
-    'You are the Connexus Trip Health AI assistant.',
+    'You are the Africonnect Trip Health AI assistant.',
     'Evaluate the traveler plan for safety, logistics, and completeness.',
     'Identify missing logistics (transport, permits, insurance, health requirements) and cultural considerations.',
     'Return a JSON object with the shape:',

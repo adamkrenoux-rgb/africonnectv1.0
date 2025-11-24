@@ -143,7 +143,7 @@ export default function AdminDashboard() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
               <span className="ml-4 px-3 py-1 bg-yellow-500 text-black text-sm font-semibold rounded">
                 Admin Dashboard

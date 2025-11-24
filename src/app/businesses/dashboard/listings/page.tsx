@@ -23,7 +23,7 @@ export default function BusinessListingsPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">

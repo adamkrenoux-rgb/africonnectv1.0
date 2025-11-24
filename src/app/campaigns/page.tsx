@@ -12,7 +12,7 @@ export default function CampaignsPage() {
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
                 <span className="text-3xl">🌍</span>
-                Connexus
+                Africonnect
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">

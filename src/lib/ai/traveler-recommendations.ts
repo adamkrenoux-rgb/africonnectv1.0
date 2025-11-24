@@ -62,7 +62,7 @@ export async function generateTravelerRecommendations(
   const topK = options.topK || 10
 
   const prompt = [
-    'You are Connexus\'s recommendation engine.',
+    'You are Africonnect\'s recommendation engine.',
     'Rank the provided candidates for the traveler based on profile, preferences, and history.',
     'Outputs must be JSON array: [{ "id": string, "type": "listing"|"business"|"experience", "score": number (0-1), "reason": string }].',
     'Return only JSON.',

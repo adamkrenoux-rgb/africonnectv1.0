@@ -29,7 +29,7 @@ export async function generateOnboardingStep(state: OnboardingState): Promise<On
   const answeredCategories = (state.answers || []).map(a => a.category).filter(Boolean)
   
   const prompt = [
-    'You are designing a conversational onboarding flow for Connexus travelers.',
+    'You are designing a conversational onboarding flow for Africonnect travelers.',
     'Ask one thoughtful question at a time to capture travel preferences, safety considerations, and logistics.',
     'IMPORTANT: Do NOT repeat any questions that have already been asked. Check the "Previous answers" list carefully.',
     'IMPORTANT: Vary the categories. If you have already asked about preferences, move to budget, logistics, safety, or culture.',

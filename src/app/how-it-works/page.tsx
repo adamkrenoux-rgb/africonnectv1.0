@@ -11,7 +11,7 @@ export default function HowItWorksPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -35,7 +35,7 @@ export default function HowItWorksPage() {
       <section className="py-20 bg-gradient-to-br from-yellow-600/20 via-orange-500/30 to-red-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            How <span className="text-yellow-400">Connexus</span> Works
+            How <span className="text-yellow-400">Africonnect</span> Works
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
             Simple steps to connect travelers, businesses, and influencers for authentic African experiences

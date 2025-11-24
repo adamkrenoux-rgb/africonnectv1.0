@@ -39,7 +39,7 @@ function CheckoutForm({ amount, onSuccess, onError }: PaymentFormProps) {
           amount,
           currency: 'usd',
           metadata: {
-            source: 'connexus',
+            source: 'africonnect',
           },
         }),
       })

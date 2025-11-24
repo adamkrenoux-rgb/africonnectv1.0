@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Connexus Setup Script
-echo "🌍 Setting up Connexus..."
+# Africonnect Setup Script
+echo "🌍 Setting up Africonnect..."
 
 # Check if Node.js is installed
 if ! command -v node &> /dev/null; then

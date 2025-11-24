@@ -11,7 +11,7 @@ export default function TravelersPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -59,7 +59,7 @@ export default function TravelersPage() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Why Choose Connexus?</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Why Choose Africonnect?</h2>
             <p className="text-xl text-gray-300">Everything you need for an authentic African adventure</p>
           </div>
           

@@ -28,7 +28,7 @@ export function TravelerAIChatAssistant({ locale }: TravelerAIChatAssistantProps
       id: 'welcome',
       role: 'assistant',
       content:
-        "Hi! I'm your Connexus travel concierge. Ask me anything—from safety logistics to hidden cultural gems—and I'll craft suggestions tailored just for you."
+        "Hi! I'm your Africonnect travel concierge. Ask me anything—from safety logistics to hidden cultural gems—and I'll craft suggestions tailored just for you."
     }
   ])
   const [inputValue, setInputValue] = useState('')

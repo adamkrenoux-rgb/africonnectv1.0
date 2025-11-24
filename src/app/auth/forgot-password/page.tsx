@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
             <div className="flex justify-between items-center py-6">
               <div className="flex items-center">
                 <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                  Connexus
+                  Africonnect
                 </Link>
               </div>
               <div className="flex space-x-4">
@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
-                Connexus
+                Africonnect
               </Link>
             </div>
             <div className="flex space-x-4">
@@ -150,13 +150,13 @@ export default function ForgotPasswordPage() {
       <footer className="bg-gradient-to-br from-black via-gray-900 to-black text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <h3 className="text-2xl font-bold">Connexus</h3>
+            <h3 className="text-2xl font-bold">Africonnect</h3>
           </div>
           <p className="text-gray-300 mb-6 max-w-md mx-auto">
             Connecting the world to authentic African experiences through AI-powered technology.
           </p>
           <p className="text-gray-400 text-sm">
-            © 2024 Connexus. Connecting hearts to Africa's vibrant culture and natural beauty.
+            © 2024 Africonnect. Connecting hearts to Africa's vibrant culture and natural beauty.
           </p>
         </div>
       </footer>

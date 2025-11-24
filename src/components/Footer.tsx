@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-2xl font-bold">Connexus</h3>
+              <h3 className="text-2xl font-bold">Africonnect</h3>
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
               Connecting the world to authentic African experiences through AI-powered technology, sustainable tourism, and community empowerment.
@@ -42,7 +42,7 @@ export default function Footer() {
         <div className="border-t border-gray-700 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 Connexus. Connecting hearts to Africa's vibrant culture and natural beauty.
+              © 2024 Africonnect. Connecting hearts to Africa's vibrant culture and natural beauty.
             </p>
             <div className="flex gap-6 mt-4 md:mt-0">
               <Link href="/privacy" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors">Privacy</Link>

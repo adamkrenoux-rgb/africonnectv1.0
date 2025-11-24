@@ -1,4 +1,4 @@
-# Auth.js Setup Guide for Connexus
+# Auth.js Setup Guide for Africonnect
 
 ## Installation
 

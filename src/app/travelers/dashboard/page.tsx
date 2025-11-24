@@ -75,7 +75,7 @@ export default function TravelerDashboard() {
       <header className="border-b border-slate-800/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-wrap items-center justify-between gap-4">
           <Link href="/" className="text-2xl font-semibold tracking-wide text-white">
-            Connexus
+            Africonnect
           </Link>
           <nav className="flex flex-wrap items-center gap-4 text-sm text-slate-300">
             <Link href="/travelers" className="hover:text-yellow-300 transition-colors">
