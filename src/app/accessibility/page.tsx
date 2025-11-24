@@ -176,7 +176,7 @@ export default function AccessibilityPage() {
                   <div className="space-y-3">
                     <div>
                       <p className="text-yellow-400 font-medium">Email</p>
-                      <p className="text-gray-300">accessibility@connexus.com</p>
+                      <p className="text-gray-300">accessibility@africonnect.com</p>
                     </div>
                     <div>
                       <p className="text-yellow-400 font-medium">Phone</p>

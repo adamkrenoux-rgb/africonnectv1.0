@@ -132,7 +132,7 @@ export default function TermsPage() {
               If you have any questions about these Terms of Service, please contact us at:
             </p>
             <div className="bg-gray-800 p-6 rounded-lg">
-              <p className="text-gray-300 mb-2">Email: legal@connexus.com</p>
+              <p className="text-gray-300 mb-2">Email: legal@africonnect.com</p>
               <p className="text-gray-300 mb-2">Address: [Company Address]</p>
               <p className="text-gray-300">Phone: [Contact Number]</p>
             </div>

@@ -82,7 +82,7 @@ export default function FAQPage() {
       },
       {
         question: "How do I contact customer support?",
-        answer: "You can reach our support team through the chat widget on any page, email us at support@connexus.com, or use the contact form. We typically respond within 24 hours."
+        answer: "You can reach our support team through the chat widget on any page, email us at support@africonnect.com, or use the contact form. We typically respond within 24 hours."
       },
       {
         question: "What makes Africonnect different from other travel platforms?",

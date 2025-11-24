@@ -146,7 +146,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 
 # Database
-DATABASE_URL="postgresql://username:password@localhost:5432/connexus"
+DATABASE_URL="postgresql://username:password@localhost:5432/africonnect"
 
 # Stripe
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
@@ -296,9 +296,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📞 Support
 
-- Email: support@connexus.com
-- Documentation: [docs.connexus.com](https://docs.connexus.com)
-- Community: [community.connexus.com](https://community.connexus.com)
+- Email: support@africonnect.com
+- Documentation: [docs.africonnect.com](https://docs.africonnect.com)
+- Community: [community.africonnect.com](https://community.africonnect.com)
 
 ---
 
